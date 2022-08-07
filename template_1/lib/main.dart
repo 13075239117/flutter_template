@@ -299,55 +299,94 @@ class _mainPageState extends State<mainPage> {
           sliver: SliverPadding(
             padding: EdgeInsets.all(8),
             sliver: SliverGrid(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                return Container(
-                  // height: 500,
-                  // decoration: BoxDecoration(
-                  //     // shape: BoxShape.rectangle,
-                  //     border: Border.all(),
-                  //     borderRadius: BorderRadius.all(Radius.circular(5))),
-                  // width: double.maxFinite,
-                  // height: double.maxFinite,
-                  // color: Color.fromARGB(255, Random().nextInt(256),
-                  //     Random().nextInt(256), Random().nextInt(256)),
-                  // child: Text("$index"),
-                  child: Card(
-                    child: Image.network(
-                      'https://picsum.photos/200/300?random=$index',
-                      // width: width.toDouble(),
-                      // height: height.toDouble(),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return Container(
+                    // height: 500,
+                    // decoration: BoxDecoration(
+                    //     // shape: BoxShape.rectangle,
+                    //     border: Border.all(),
+                    //     borderRadius: BorderRadius.all(Radius.circular(5))),
+                    // width: double.maxFinite,
+                    // height: double.maxFinite,
+                    // color: Color.fromARGB(255, Random().nextInt(256),
+                    //     Random().nextInt(256), Random().nextInt(256)),
+                    // child: Text("$index"),
+                    child: LayoutBuilder(builder: (context, constrains) {
+                      return GestureDetector(
+                        onTap: () {
+                          print(constrains);
+                        },
+                        child: Card(
+                          child:
+                              Column(mainAxisSize: MainAxisSize.max, children: [
+                            Expanded(
+                              child: Image.network(
+                                'https://picsum.photos/200/300?random=$index',
+                                width: constrains.maxWidth,
+                                scale: 2,
+                                // height: constrains.maxHeight,
+                                // height: double.,
+                                // width: width.toDouble(),
+                                // height: 300,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                            const ListTile(
+                              leading: Icon(Icons.album),
+                              title: Text(
+                                'The Enchanted Nightingale',
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              // subtitle: Text(
+                              //     'Music by Julie Gable. Lyrics by Sidney Stein.'),
+                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.end,
+                            //   children: <Widget>[
+                            //     TextButton(
+                            //       child: const Text('BUY TICKETS'),
+                            //       onPressed: () {/* ... */},
+                            //     ),
+                            //     // Expanded(child: const SizedBox(width: 8)),
+                            //     TextButton(
+                            //       child: const Text('LISTEN'),
+                            //       onPressed: () {/* ... */},
+                            //     ),
+                            //     const SizedBox(width: 8),
+                            //   ],
+                            // ),
+                          ]),
+                        ),
+                      );
+                    }),
 
-                  //     Image.network(
-                  //   'https://picsum.photos/200/300?random=$index',
-                  //   // width: width.toDouble(),
-                  //   // height: height.toDouble(),
-                  //   fit: BoxFit.fill,
-                  // )
-                );
-              }, childCount: 20),
-              gridDelegate: SliverWovenGridDelegate.count(
-                pattern: [
-                  WovenGridTile(1),
-                  WovenGridTile(
-                    5 / 7,
-                    crossAxisRatio: 0.9,
-                    alignment: AlignmentDirectional.centerEnd,
-                  ),
-                ],
-                crossAxisCount: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-              ),
-              // SliverGridDelegateWithFixedCrossAxisCount(
-              //     crossAxisCount: 2,
-              //     crossAxisSpacing: 8,
-              //     mainAxisSpacing: 8,
-              //     childAspectRatio: 2)
-              //     ),
-            ),
+                    //     Image.network(/
+                    //   'https://picsum.photos/200/300?random=$index',
+                    //   // width: width.toDouble(),
+                    //   // height: height.toDouble(),
+                    //   fit: BoxFit.fill,
+                    // )
+                  );
+                }, childCount: 20),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  mainAxisExtent: 300,
+                  // maxCrossAxisExtent: double.maxFinite,
+                  //长宽比
+                  childAspectRatio: 1.5,
+                  //列间距
+                  crossAxisSpacing: 5,
+                  //行间距
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 2,
+                )
+                // SliverGridDelegateWithFixedCrossAxisCount(
+                //     crossAxisCount: 2,
+                //     crossAxisSpacing: 8,
+                //     mainAxisSpacing: 8,
+                //     childAspectRatio: 2)
+                //     ),
+                ),
           ),
         )
       ],

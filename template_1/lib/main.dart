@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:math';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -24,8 +25,8 @@ class MyApp extends StatelessWidget {
           cardTheme: CardTheme(
             elevation: 5,
           ),
-          appBarTheme: const AppBarTheme(
-              // backgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(
+              backgroundColor: Colors.orange[600],
               elevation: 0, //隐藏AppBar底部的阴影分割线
               centerTitle: true,
               systemOverlayStyle: SystemUiOverlayStyle.dark //设置状态栏的背景
@@ -67,23 +68,52 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   //   //   ..repeat(reverse: true);
   // }
   late TabController tabController;
-
+  late ScrollController _primaryScrollController;
   @override
   void initState() {
+    _primaryScrollController = ScrollController();
     super.initState();
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
+    // _primaryScrollController.addListener(() {
+    //   print(_primaryScrollController.position.pixels);
+    // });
   }
 
   @override
   void dispose() {
     tabController.dispose();
+    _primaryScrollController.dispose();
     super.dispose();
+  }
+
+  void _handleStatusBarTap() {
+    // print(_primaryScrollController.hasClients);
+    if (_primaryScrollController.hasClients) {
+      _primaryScrollController.animateTo(
+        0.00,
+        duration: const Duration(milliseconds: 1500),
+        curve: Curves.easeOutBack, // TODO(ianh): Use a more appropriate curve.
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      // appBar: AppBar(
+      //   bottom: TabBar(controller: tabController, tabs: [
+      //     Tab(
+      //       icon: Icon(Icons.cloud_outlined),
+      //     ),
+      //     Tab(
+      //       icon: Icon(Icons.beach_access_sharp),
+      //     ),
+      //     Tab(
+      //       icon: Icon(Icons.brightness_5_sharp),
+      //     ),
+      //   ]),
+      // ),
       // appBar: AppBar(
       //     leading: Builder(
       //       builder: (BuildContext context) {
@@ -124,6 +154,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       //     centerTitle: true),
       body: mainPage(
         ki: _scaffoldKey,
+        con: _primaryScrollController,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (() {
+          setState(() {
+            _handleStatusBarTap();
+          });
+        }),
+        child: const Icon(Icons.navigation),
       ),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 10,
@@ -245,151 +284,256 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
 class mainPage extends StatefulWidget {
   var ki;
-  mainPage({this.ki, Key? key}) : super(key: key);
+  var con;
+  mainPage({this.ki, this.con, Key? key}) : super(key: key);
 
   @override
   State<mainPage> createState() => _mainPageState();
 }
 
-class _mainPageState extends State<mainPage> {
+class _mainPageState extends State<mainPage>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
+  late TabController _tabController;
+  late ScrollController _scrollController;
+  var keyi = GlobalKey();
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _scrollController = ScrollController()
+      ..addListener(() {
+        print(_scrollController.position.pixels);
+      });
+    // widget.con.addListener(() {
+    //   print(widget.con.position.pixels);
+    // });
+    // print(widget.ki.currentContext._primaryScrollControlle);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        SliverAppBar(
-          leading: IconButton(
-              onPressed: () {
-                widget.ki.currentState!.openDrawer();
-              },
-              icon: Icon(Icons.ac_unit)),
-          expandedHeight: 200,
-          centerTitle: true,
-          // title: Text("nihao"),
-          floating: true,
-          // pinned: true,
-          // snap: true,
-          stretch: true,
-          onStretchTrigger: () async {
-            print('onStretchTrigger');
-            return;
-          },
-          flexibleSpace: FlexibleSpaceBar(
+    return RefreshIndicator(
+      key: _refreshIndicatorKey,
+      color: Colors.white,
+      backgroundColor: Colors.blue,
+      onRefresh: () async {
+        print("123");
+        Future.value();
+        return Future<void>.delayed(const Duration(seconds: 3));
+      },
+      child: CustomScrollView(
+        controller: widget.con,
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverAppBar(
+            bottom: TabBar(
+                physics: NeverScrollableScrollPhysics(),
+                // enableFeedback: true,
+                onTap: (value) {
+                  if (value == 0 && widget.con.hasClients) {
+                    // print(_scrollController.hasClients);
+                    widget.con.animateTo(0.00,
+                        duration: Duration(seconds: 2),
+                        curve: Curves.easeOutBack);
+                  }
+                },
+                controller: _tabController,
+                indicatorColor: Colors.green[400],
+                tabs: [
+                  Tab(
+                    icon: Icon(
+                      Icons.cloud_outlined,
+                      color: Colors.green[400],
+                    ),
+                  ),
+                  Tab(
+                    icon: Icon(
+                      Icons.beach_access_sharp,
+                      color: Colors.green[400],
+                    ),
+                  ),
+                  Tab(
+                    icon: Icon(
+                      Icons.brightness_5_sharp,
+                      color: Colors.green[400],
+                    ),
+                  ),
+                ]),
+            leading: IconButton(
+                onPressed: () {
+                  widget.ki.currentState!.openDrawer();
+                },
+                icon: Icon(Icons.ac_unit)),
+            expandedHeight: 200,
+            centerTitle: true,
+            // title: Text("nihao"),
+            floating: true,
+            pinned: true,
+            // snap: true,
+            stretch: true,
+            onStretchTrigger: () async {
+              print('onStretchTrigger');
+              return;
+            },
+            flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               collapseMode: CollapseMode.parallax,
               background: Image.asset(
                 "assets/images/top.png",
                 fit: BoxFit.cover,
               ),
-              title: Icon(
-                color: Colors.green[100],
-                Icons.airplanemode_active,
-                textDirection: TextDirection.rtl,
-              )),
-        ),
-        // SliverList(
-        //   delegate: SliverChildBuilderDelegate((context, index) {
-        //     return ListTile(
-        //       leading: Text("1"),
-        //       title: Text("ok"),
-        //     );r
-        //   }, childCount: 20),
-        // ),
-        SliverSafeArea(
-          sliver: SliverPadding(
-            padding: EdgeInsets.all(8),
-            sliver: SliverGrid(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  return Container(
-                    // height: 500,
-                    // decoration: BoxDecoration(
-                    //     // shape: BoxShape.rectangle,
-                    //     border: Border.all(),
-                    //     borderRadius: BorderRadius.all(Radius.circular(5))),
-                    // width: double.maxFinite,
-                    // height: double.maxFinite,
-                    // color: Color.fromARGB(255, Random().nextInt(256),
-                    //     Random().nextInt(256), Random().nextInt(256)),
-                    // child: Text("$index"),
-                    child: LayoutBuilder(builder: (context, constrains) {
-                      return GestureDetector(
-                        onTap: () {
-                          print(constrains);
-                        },
-                        child: Card(
-                          child:
-                              Column(mainAxisSize: MainAxisSize.max, children: [
-                            Expanded(
-                              child: Image.network(
-                                'https://picsum.photos/200/300?random=$index',
-                                width: constrains.maxWidth,
-                                scale: 2,
-                                // height: constrains.maxHeight,
-                                // height: double.,
-                                // width: width.toDouble(),
-                                // height: 300,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            const ListTile(
-                              leading: Icon(Icons.album),
-                              title: Text(
-                                'The Enchanted Nightingale',
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              // subtitle: Text(
-                              //     'Music by Julie Gable. Lyrics by Sidney Stein.'),
-                            ),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.end,
-                            //   children: <Widget>[
-                            //     TextButton(
-                            //       child: const Text('BUY TICKETS'),
-                            //       onPressed: () {/* ... */},
-                            //     ),
-                            //     // Expanded(child: const SizedBox(width: 8)),
-                            //     TextButton(
-                            //       child: const Text('LISTEN'),
-                            //       onPressed: () {/* ... */},
-                            //     ),
-                            //     const SizedBox(width: 8),
-                            //   ],
-                            // ),
-                          ]),
-                        ),
-                      );
-                    }),
-
-                    //     Image.network(/
-                    //   'https://picsum.photos/200/300?random=$index',
-                    //   // width: width.toDouble(),
-                    //   // height: height.toDouble(),
-                    //   fit: BoxFit.fill,
-                    // )
-                  );
-                }, childCount: 20),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisExtent: 300,
-                  // maxCrossAxisExtent: double.maxFinite,
-                  //长宽比
-                  childAspectRatio: 1.5,
-                  //列间距
-                  crossAxisSpacing: 5,
-                  //行间距
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 2,
-                )
-                // SliverGridDelegateWithFixedCrossAxisCount(
-                //     crossAxisCount: 2,
-                //     crossAxisSpacing: 8,
-                //     mainAxisSpacing: 8,
-                //     childAspectRatio: 2)
-                //     ),
-                ),
+              // title: Icon(
+              //   color: Colors.green[100],
+              //   Icons.airplanemode_active,
+              //   textDirection: TextDirection.rtl,
+              // )
+            ),
           ),
-        )
-      ],
+          // SliverList(
+          //   delegate: SliverChildBuilderDelegate((context, index) {
+          //     return ListTile(
+          //       leading: Text("1"),
+          //       title: Text("ok"),
+          //     );r
+          //   }, childCount: 20),
+          // ),
+          SliverPadding(
+            padding: EdgeInsets.all(8),
+            sliver: SliverFillRemaining(
+              child: TabBarView(
+                  controller: _tabController,
+                  physics: BouncingScrollPhysics(),
+                  children: [
+                    GridView.builder(
+                      // scrollDirection: Axis.horizontal,
+                      controller: _scrollController,
+                      physics: const BouncingScrollPhysics(),
+                      primary: false,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        mainAxisExtent: 300,
+                        // maxCrossAxisExtent: double.maxFinite,
+                        //长宽比
+                        childAspectRatio: 1.5,
+                        //列间距
+                        crossAxisSpacing: 5,
+                        //行间距
+                        mainAxisSpacing: 10,
+                        crossAxisCount: 2,
+                      ),
+                      itemBuilder: (context, index) {
+                        return list_card(index);
+                      },
+                      itemCount: 30,
+                    ),
+                    // SliverGrid(
+                    //     delegate: SliverChildBuilderDelegate((context, index) {
+                    //       return list_card(index);
+                    //     }, childCount: 20),
+                    //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    //       mainAxisExtent: 300,
+                    //       // maxCrossAxisExtent: double.maxFinite,
+                    //       //长宽比
+                    //       childAspectRatio: 1.5,
+                    //       //列间距
+                    //       crossAxisSpacing: 5,
+                    //       //行间距
+                    //       mainAxisSpacing: 10,
+                    //       crossAxisCount: 2,
+                    //     )
+                    //     // SliverGridDelegateWithFixedCrossAxisCount(
+                    //     //     crossAxisCount: 2,
+                    //     //     crossAxisSpacing: 8,
+                    //     //     mainAxisSpacing: 8,
+                    //     //     childAspectRatio: 2)
+                    //     //     ),
+                    //     ),
+                    Center(
+                      child: Text("page2"),
+                    ),
+                    Center(
+                      child: Text("page3"),
+                    ),
+                  ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container list_card(int index) {
+    return Container(
+      // height: 500,
+      // decoration: BoxDecoration(
+      //     // shape: BoxShape.rectangle,
+      //     border: Border.all(),
+      //     borderRadius: BorderRadius.all(Radius.circular(5))),
+      // width: double.maxFinite,
+      // height: double.maxFinite,
+      // color: Color.fromARGB(255, Random().nextInt(256),
+      //     Random().nextInt(256), Random().nextInt(256)),
+      // child: Text("$index"),
+      child: LayoutBuilder(builder: (context, constrains) {
+        return GestureDetector(
+          onTap: () {
+            print(constrains);
+          },
+          child: Card(
+            child: Column(mainAxisSize: MainAxisSize.max, children: [
+              Expanded(
+                child: Image.network(
+                  'https://picsum.photos/200/300?random=$index',
+                  width: constrains.maxWidth,
+                  scale: 2,
+                  // height: constrains.maxHeight,
+                  // height: double.,
+                  // width: width.toDouble(),
+                  // height: 300,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              const ListTile(
+                leading: Icon(Icons.album),
+                title: Text(
+                  'The Enchanted Nightingale',
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                // subtitle: Text(
+                //     'Music by Julie Gable. Lyrics by Sidney Stein.'),
+              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.end,
+              //   children: <Widget>[
+              //     TextButton(
+              //       child: const Text('BUY TICKETS'),
+              //       onPressed: () {/* ... */},
+              //     ),
+              //     // Expanded(child: const SizedBox(width: 8)),
+              //     TextButton(
+              //       child: const Text('LISTEN'),
+              //       onPressed: () {/* ... */},
+              //     ),
+              //     const SizedBox(width: 8),
+              //   ],
+              // ),
+            ]),
+          ),
+        );
+      }),
+
+      //     Image.network(/
+      //   'https://picsum.photos/200/300?random=$index',
+      //   // width: width.toDouble(),
+      //   // height: height.toDouble(),
+      //   fit: BoxFit.fill,
+      // )
     );
   }
 }

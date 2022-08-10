@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -295,6 +297,7 @@ class _mainPageState extends State<mainPage>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late TabController _tabController;
   late ScrollController _scrollController;
   var keyi = GlobalKey();
@@ -368,29 +371,38 @@ class _mainPageState extends State<mainPage>
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
         ),
         SliverPadding(
-          padding: EdgeInsets.all(8),
-          sliver: SliverGrid(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                return list_card(index);
-              }, childCount: 20),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                mainAxisExtent: 300,
-                // maxCrossAxisExtent: double.maxFinite,
-                //长宽比
-                childAspectRatio: 1.5,
-                //列间距
-                crossAxisSpacing: 5,
-                //行间距
-                mainAxisSpacing: 10,
-                crossAxisCount: 2,
-              )
-              // SliverGridDelegateWithFixedCrossAxisCount(
-              //     crossAxisCount: 2,
-              //     crossAxisSpacing: 8,
-              //     mainAxisSpacing: 8,
-              //     childAspectRatio: 2)
-              //     ),
-              ),
+          padding: EdgeInsets.all(4),
+          sliver:
+              // SliverAnimatedList(
+              //   key: _listKey,
+              //   initialItemCount: 1,
+              //   itemBuilder: (context, index, Animation<double> animation) {
+              //     return list_card(index);
+              //   },
+              // ),
+              SliverGrid(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return list_card(index);
+                  }, childCount: 4),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    mainAxisExtent: 300,
+                    // ((Random().nextDouble() * 3) + 7) * 30
+                    // maxCrossAxisExtent: double.maxFinite,
+                    //长宽比
+                    childAspectRatio: 1.5,
+                    //列间距
+                    crossAxisSpacing: 5,
+                    //行间距
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 2,
+                  )
+                  // SliverGridDelegateWithFixedCrossAxisCount(
+                  //     crossAxisCount: 2,
+                  //     crossAxisSpacing: 8,
+                  //     mainAxisSpacing: 8,
+                  //     childAspectRatio: 2)
+                  //     ),
+                  ),
         )
         // ),
         // ),
@@ -455,9 +467,7 @@ class _mainPageState extends State<mainPage>
               //     ),
             ),
           ),
-          Center(
-            child: Text("page2"),
-          ),
+          slide(),
           Center(
             child: Text("page3"),
           ),
@@ -548,19 +558,61 @@ class _mainPageState extends State<mainPage>
             print(constrains);
           },
           child: Card(
+            clipBehavior: Clip.antiAlias,
             child: Column(mainAxisSize: MainAxisSize.max, children: [
-              Expanded(
-                child: Image.network(
-                  'https://picsum.photos/200/300?random=$index',
-                  width: constrains.maxWidth,
-                  scale: 2,
-                  // height: constrains.maxHeight,
-                  // height: double.,
-                  // width: width.toDouble(),
-                  // height: 300,
-                  fit: BoxFit.fill,
+              Container(
+                height: 200,
+                child: Swiper(
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return Image.network(
+                      'https://picsum.photos/200/300?random=$index',
+                      fit: BoxFit.cover,
+                    );
+                  },
+                  autoplay: false,
+                  //自动轮播
+                  onIndexChanged: (index) {},
+                  //引起下标变化的监听
+                  onTap: (index) {
+                    // Navigator.push(context,MaterialPageRoute(builder:(_)=>PhotoPreview(
+                    //       galleryItems:list,
+                    //       defaultImage: index,
+                    //     )));
+                  },
+                  //点击轮播时调用
+                  duration: 1000,
+                  //切换时的动画时间
+                  autoplayDelay: 2000,
+                  //自动播放间隔毫秒数.
+                  autoplayDisableOnInteraction: false,
+                  loop: true,
+                  //是否无限轮播
+                  scrollDirection: Axis.vertical,
+                  //滚动方向
+                  index: 0,
+                  //初始下标位置
+                  scale: 0.6,
+                  //轮播图之间的间距
+                  viewportFraction: 0.8,
+                  //当前视窗比例，小于1时就会在屏幕内，可以看见旁边的轮播图
+                  // indicatorLayout: PageIndicatorLayout.COLOR,
+                  pagination: new SwiperPagination(),
+                  //底部指示器
+                  // control: new SwiperControl(), //左右箭头
                 ),
               ),
+
+              // Image.network(
+              //   'https://picsum.photos/200/300?random=$index',
+              //   width: constrains.maxWidth,
+              //   // scale: 2,
+              //   // height: constrains.maxHeight,
+              //   // height: double.,
+              //   // width: width.toDouble(),
+              //   height: 150,
+              //   fit: BoxFit.cover,
+              // ),
               const ListTile(
                 leading: Icon(Icons.album),
                 title: Text(
@@ -599,5 +651,67 @@ class _mainPageState extends State<mainPage>
       // )
     );
   }
+}
+
+Widget slide() {
+  return Slidable(
+    // Specify a key if the Slidable is dismissible.
+    key: const ValueKey(0),
+
+    // The start action pane is the one at the left or the top side.
+    startActionPane: ActionPane(
+      // A motion is a widget used to control how the pane animates.
+      motion: const ScrollMotion(),
+
+      // A pane can dismiss the Slidable.
+      dismissible: DismissiblePane(onDismissed: () {}),
+
+      // All actions are defined in the children parameter.
+      children: [
+        // A SlidableAction can have an icon and/or a label.
+        SlidableAction(
+          onPressed: (context) {},
+          backgroundColor: Color(0xFFFE4A49),
+          foregroundColor: Colors.white,
+          icon: Icons.delete,
+          label: 'Delete',
+        ),
+        SlidableAction(
+          onPressed: (context) {},
+          backgroundColor: Color(0xFF21B7CA),
+          foregroundColor: Colors.white,
+          icon: Icons.share,
+          label: 'Share',
+        ),
+      ],
+    ),
+
+    // The end action pane is the one at the right or the bottom side.
+    endActionPane: ActionPane(
+      motion: ScrollMotion(),
+      children: [
+        SlidableAction(
+          // An action can be bigger than the others.
+          flex: 2,
+          onPressed: (context) {},
+          backgroundColor: Color(0xFF7BC043),
+          foregroundColor: Colors.white,
+          icon: Icons.archive,
+          label: 'Archive',
+        ),
+        SlidableAction(
+          onPressed: (context) {},
+          backgroundColor: Color(0xFF0392CF),
+          foregroundColor: Colors.white,
+          icon: Icons.save,
+          label: 'Save',
+        ),
+      ],
+    ),
+
+    // The child of the Slidable is what the user sees when the
+    // component is not dragged.
+    child: const ListTile(title: Text('Slide me'), focusColor: Colors.red),
+  );
 }
 //body

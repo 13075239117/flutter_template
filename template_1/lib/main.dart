@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
             elevation: 5,
           ),
           appBarTheme: AppBarTheme(
-              backgroundColor: Colors.orange[600],
+              backgroundColor: Color(0x33FB8C00),
               elevation: 0, //隐藏AppBar底部的阴影分割线
               centerTitle: true,
               systemOverlayStyle: SystemUiOverlayStyle.dark //设置状态栏的背景
@@ -74,9 +74,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     _primaryScrollController = ScrollController();
     super.initState();
     tabController = TabController(length: 3, vsync: this);
-    // _primaryScrollController.addListener(() {
-    //   print(_primaryScrollController.position.pixels);
-    // });
+    _primaryScrollController.addListener(() {
+      print(_primaryScrollController.position.pixels);
+    });
   }
 
   @override
@@ -306,10 +306,10 @@ class _mainPageState extends State<mainPage>
     // TODO: implement initState
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _scrollController = ScrollController()
-      ..addListener(() {
-        print(_scrollController.position.pixels);
-      });
+    _scrollController = ScrollController();
+    // ..addListener(() {
+    //   print(_scrollController.position.pixels);
+    // });
     // widget.con.addListener(() {
     //   print(widget.con.position.pixels);
     // });
@@ -327,142 +327,205 @@ class _mainPageState extends State<mainPage>
         Future.value();
         return Future<void>.delayed(const Duration(seconds: 3));
       },
-      child: CustomScrollView(
-        controller: widget.con,
+      child: NestedScrollView(
         physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            bottom: TabBar(
-                physics: NeverScrollableScrollPhysics(),
-                // enableFeedback: true,
-                onTap: (value) {
-                  if (value == 0 && widget.con.hasClients) {
-                    // print(_scrollController.hasClients);
-                    widget.con.animateTo(0.00,
-                        duration: Duration(seconds: 2),
-                        curve: Curves.easeOutBack);
-                  }
-                },
-                controller: _tabController,
-                indicatorColor: Colors.green[400],
-                tabs: [
-                  Tab(
-                    icon: Icon(
-                      Icons.cloud_outlined,
-                      color: Colors.green[400],
-                    ),
-                  ),
-                  Tab(
-                    icon: Icon(
-                      Icons.beach_access_sharp,
-                      color: Colors.green[400],
-                    ),
-                  ),
-                  Tab(
-                    icon: Icon(
-                      Icons.brightness_5_sharp,
-                      color: Colors.green[400],
-                    ),
-                  ),
-                ]),
-            leading: IconButton(
-                onPressed: () {
-                  widget.ki.currentState!.openDrawer();
-                },
-                icon: Icon(Icons.ac_unit)),
-            expandedHeight: 200,
-            centerTitle: true,
-            // title: Text("nihao"),
-            floating: true,
-            pinned: true,
-            // snap: true,
-            stretch: true,
-            onStretchTrigger: () async {
-              print('onStretchTrigger');
-              return;
-            },
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              collapseMode: CollapseMode.parallax,
-              background: Image.asset(
-                "assets/images/top.png",
-                fit: BoxFit.cover,
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          print(context);
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: appBar_joko(),
+            )
+          ];
+        },
+        body: listBody_joko(),
+      ),
+    );
+  }
+
+  CustomScrollView CustomScrollView_joko(context) {
+    return CustomScrollView(
+      controller: widget.con,
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        // appBar_joko(),
+        // SliverList(
+        //   delegate: SliverChildBuilderDelegate((context, index) {
+        //     return ListTile(
+        //       leading: Text("1"),
+        //       title: Text("ok"),
+        //     );r
+        //   }, childCount: 20),
+        // ),
+        // SliverSafeArea(
+        // sliver:
+        // SliverPadding(
+        //   padding: EdgeInsets.all(8),
+        //   sliver:
+        SliverOverlapInjector(
+          // This is the flip side of the SliverOverlapAbsorber
+          // above.
+          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+        ),
+        SliverPadding(
+          padding: EdgeInsets.all(8),
+          sliver: SliverGrid(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                return list_card(index);
+              }, childCount: 20),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                mainAxisExtent: 300,
+                // maxCrossAxisExtent: double.maxFinite,
+                //长宽比
+                childAspectRatio: 1.5,
+                //列间距
+                crossAxisSpacing: 5,
+                //行间距
+                mainAxisSpacing: 10,
+                crossAxisCount: 2,
+              )
+              // SliverGridDelegateWithFixedCrossAxisCount(
+              //     crossAxisCount: 2,
+              //     crossAxisSpacing: 8,
+              //     mainAxisSpacing: 8,
+              //     childAspectRatio: 2)
+              //     ),
               ),
-              // title: Icon(
-              //   color: Colors.green[100],
-              //   Icons.airplanemode_active,
-              //   textDirection: TextDirection.rtl,
-              // )
-            ),
-          ),
-          // SliverList(
-          //   delegate: SliverChildBuilderDelegate((context, index) {
-          //     return ListTile(
-          //       leading: Text("1"),
-          //       title: Text("ok"),
-          //     );r
-          //   }, childCount: 20),
+        )
+        // ),
+        // ),
+      ],
+    );
+  }
+
+  TabBarView listBody_joko() {
+    return TabBarView(
+        controller: _tabController,
+        physics: BouncingScrollPhysics(),
+        children: [
+          // GridView.builder(
+          //   // scrollDirection: Axis.horizontal,
+          //   controller: _scrollController,
+          //   physics: const BouncingScrollPhysics(),
+          //   primary: false,
+          //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //     mainAxisExtent: 300,
+          //     // maxCrossAxisExtent: double.maxFinite,
+          //     //长宽比
+          //     childAspectRatio: 1.5,
+          //     //列间距
+          //     crossAxisSpacing: 5,
+          //     //行间距
+          //     mainAxisSpacing: 10,
+          //     crossAxisCount: 2,
+          //   ),
+          //   itemBuilder: (context, index) {
+          //     return list_card(index);
+          //   },
+          //   itemCount: 30,
           // ),
-          SliverPadding(
-            padding: EdgeInsets.all(8),
-            sliver: SliverFillRemaining(
-              child: TabBarView(
-                  controller: _tabController,
-                  physics: BouncingScrollPhysics(),
-                  children: [
-                    GridView.builder(
-                      // scrollDirection: Axis.horizontal,
-                      controller: _scrollController,
-                      physics: const BouncingScrollPhysics(),
-                      primary: false,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        mainAxisExtent: 300,
-                        // maxCrossAxisExtent: double.maxFinite,
-                        //长宽比
-                        childAspectRatio: 1.5,
-                        //列间距
-                        crossAxisSpacing: 5,
-                        //行间距
-                        mainAxisSpacing: 10,
-                        crossAxisCount: 2,
-                      ),
-                      itemBuilder: (context, index) {
-                        return list_card(index);
-                      },
-                      itemCount: 30,
-                    ),
-                    // SliverGrid(
-                    //     delegate: SliverChildBuilderDelegate((context, index) {
-                    //       return list_card(index);
-                    //     }, childCount: 20),
-                    //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    //       mainAxisExtent: 300,
-                    //       // maxCrossAxisExtent: double.maxFinite,
-                    //       //长宽比
-                    //       childAspectRatio: 1.5,
-                    //       //列间距
-                    //       crossAxisSpacing: 5,
-                    //       //行间距
-                    //       mainAxisSpacing: 10,
-                    //       crossAxisCount: 2,
-                    //     )
-                    //     // SliverGridDelegateWithFixedCrossAxisCount(
-                    //     //     crossAxisCount: 2,
-                    //     //     crossAxisSpacing: 8,
-                    //     //     mainAxisSpacing: 8,
-                    //     //     childAspectRatio: 2)
-                    //     //     ),
-                    //     ),
-                    Center(
-                      child: Text("page2"),
-                    ),
-                    Center(
-                      child: Text("page3"),
-                    ),
-                  ]),
+          SafeArea(
+            top: false,
+            bottom: false,
+            child: Builder(
+              builder: (context) {
+                return CustomScrollView_joko(context);
+              },
+              // SliverGrid(
+              //     delegate: SliverChildBuilderDelegate((context, index) {
+              //       return list_card(index);
+              //     }, childCount: 20),
+              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //       mainAxisExtent: 300,
+              //       // maxCrossAxisExtent: double.maxFinite,
+              //       //长宽比
+              //       childAspectRatio: 1.5,
+              //       //列间距
+              //       crossAxisSpacing: 5,
+              //       //行间距
+              //       mainAxisSpacing: 10,
+              //       crossAxisCount: 2,
+              //     )
+              //     // SliverGridDelegateWithFixedCrossAxisCount(
+              //     //     crossAxisCount: 2,
+              //     //     crossAxisSpacing: 8,
+              //     //     mainAxisSpacing: 8,
+              //     //     childAspectRatio: 2)
+              //     //     ),
+              //     ),
             ),
           ),
-        ],
+          Center(
+            child: Text("page2"),
+          ),
+          Center(
+            child: Text("page3"),
+          ),
+        ]);
+  }
+
+  SliverAppBar appBar_joko() {
+    return SliverAppBar(
+      bottom: TabBar(
+          physics: NeverScrollableScrollPhysics(),
+          // enableFeedback: true,
+          onTap: (value) {
+            if (value == 0 && widget.con.hasClients) {
+              // print(_scrollController.hasClients);
+              widget.con.animateTo(0.00,
+                  duration: Duration(seconds: 2), curve: Curves.easeOutBack);
+            }
+          },
+          controller: _tabController,
+          indicatorColor: Colors.green[400],
+          tabs: [
+            Tab(
+              icon: Icon(
+                Icons.cloud_outlined,
+                color: Colors.green[400],
+              ),
+            ),
+            Tab(
+              icon: Icon(
+                Icons.beach_access_sharp,
+                color: Colors.green[400],
+              ),
+            ),
+            Tab(
+              icon: Icon(
+                Icons.brightness_5_sharp,
+                color: Colors.green[400],
+              ),
+            ),
+          ]),
+      leading: IconButton(
+          onPressed: () {
+            widget.ki.currentState!.openDrawer();
+          },
+          icon: Icon(Icons.ac_unit)),
+      expandedHeight: 200,
+      centerTitle: true,
+      // title: Text("nihao"),
+      floating: true,
+      pinned: true,
+      // snap: true,
+      stretch: true,
+      onStretchTrigger: () async {
+        print('onStretchTrigger');
+        return;
+      },
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: true,
+        collapseMode: CollapseMode.parallax,
+        background: Image.asset(
+          "assets/images/top.png",
+          fit: BoxFit.cover,
+        ),
+        // title: Icon(
+        //   color: Colors.green[100],
+        //   Icons.airplanemode_active,
+        //   textDirection: TextDirection.rtl,
+        // )
       ),
     );
   }

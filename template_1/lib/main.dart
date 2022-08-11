@@ -1,3 +1,4 @@
+// import 'dart:ffi';
 import 'dart:ui';
 import 'dart:math';
 import 'package:flutter/gestures.dart';
@@ -76,9 +77,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     _primaryScrollController = ScrollController();
     super.initState();
     tabController = TabController(length: 3, vsync: this);
-    _primaryScrollController.addListener(() {
-      print(_primaryScrollController.position.pixels);
-    });
+    // _primaryScrollController.addListener(() {
+    //   print(_primaryScrollController.position.pixels);
+    // });
   }
 
   @override
@@ -310,6 +311,7 @@ class _mainPageState extends State<mainPage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _scrollController = ScrollController();
+
     // ..addListener(() {
     //   print(_scrollController.position.pixels);
     // });
@@ -333,7 +335,6 @@ class _mainPageState extends State<mainPage>
       child: NestedScrollView(
         physics: const BouncingScrollPhysics(),
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-          print(context);
           return <Widget>[
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
@@ -347,8 +348,20 @@ class _mainPageState extends State<mainPage>
   }
 
   CustomScrollView CustomScrollView_joko(context) {
+    double height = (Random().nextInt(4) + 1) * 100;
+    final items = List.generate(100, (index) {
+      int ys = index % 8 + 1;
+      return LayoutId(
+          id: "id_$index",
+          child: Container(
+            width: 200,
+            height: 40 + Random().nextDouble() * 100,
+            color: Colors.red[100 * ys],
+            child: FlutterLogo(), //替换成你的图片控件
+          ));
+    });
     return CustomScrollView(
-      controller: widget.con,
+      // controller: widget.con,
       physics: const BouncingScrollPhysics(),
       slivers: [
         // appBar_joko(),
@@ -371,39 +384,132 @@ class _mainPageState extends State<mainPage>
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
         ),
         SliverPadding(
-          padding: EdgeInsets.all(4),
-          sliver:
-              // SliverAnimatedList(
-              //   key: _listKey,
-              //   initialItemCount: 1,
-              //   itemBuilder: (context, index, Animation<double> animation) {
-              //     return list_card(index);
-              //   },
+            padding: EdgeInsets.all(4),
+            sliver: SliverFillRemaining(
+              // fillOverscroll: true,
+              child: MasonryGridView.count(
+                controller: widget.con,
+                // 展示几列
+                crossAxisCount: 2,
+                // 元素总个数
+                itemCount: 20,
+                // 单个子元素
+                itemBuilder: (BuildContext context, int index) {
+                  print(height);
+                  return list_card(index, (Random().nextInt(4) + 1) * 100);
+                },
+                // 纵向元素间距
+                mainAxisSpacing: 10,
+                // 横向元素间距
+                crossAxisSpacing: 10,
+                //本身不滚动，让外面的singlescrollview来滚动
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true, //收缩，让元素宽度自适应
+              ),
+              // CustomMultiChildLayout(
+              //   delegate: ProxyClass(items.length, 3, 5),
+              //   children: items,
               // ),
-              SliverGrid(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    return list_card(index);
-                  }, childCount: 4),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    mainAxisExtent: 300,
-                    // ((Random().nextDouble() * 3) + 7) * 30
-                    // maxCrossAxisExtent: double.maxFinite,
-                    //长宽比
-                    childAspectRatio: 1.5,
-                    //列间距
-                    crossAxisSpacing: 5,
-                    //行间距
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 2,
-                  )
-                  // SliverGridDelegateWithFixedCrossAxisCount(
-                  //     crossAxisCount: 2,
-                  //     crossAxisSpacing: 8,
-                  //     mainAxisSpacing: 8,
-                  //     childAspectRatio: 2)
-                  //     ),
-                  ),
-        )
+            )
+
+            // SliverList(
+            //   delegate: SliverChildBuilderDelegate((context, index) {
+            //     double height = (Random().nextInt(4) + 1) * 100;
+            //     print((Random().nextDouble() * 5) + 1);
+            //     return list_card(index, height);
+            //   }, childCount: 10),
+            // )
+            // SliverAnimatedList(
+            //   key: _listKey,
+            //   initialItemCount: 1,
+            //   itemBuilder: (context, index, Animation<double> animation) {
+            //     return list_card(index);
+            //   },
+            // ),
+            //     SliverFillRemaining(
+            //   fillOverscroll: true,
+            //   child: MasonryGridView.count(
+            //     // physics: const BouncingScrollPhysics(),
+            //     crossAxisCount: 2,
+            //     mainAxisSpacing: 4,
+            //     crossAxisSpacing: 4,
+            //     itemBuilder: (context, index) {
+            //       final height = (Random().nextInt(4) + 1) * 100;
+            //       print(height);
+            //       return Image.network(
+            //         'https://picsum.photos/100/$height?random=$index',
+            //         width: 100.toDouble(),
+            //         height: height.toDouble(),
+            //         fit: BoxFit.cover,
+            //       );
+            //     },
+            //     itemCount: 50,
+            //   ),
+            // )
+            //     SliverFillRemaining(
+            //   fillOverscroll: true,
+            //   child: GridView.builder(
+            //     shrinkWrap: true,
+            //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //       // mainAxisExtent: (Random().nextInt(4) + 1) * 100,
+            //       // ((Random().nextDouble() * 3) + 7) * 30
+            //       // maxCrossAxisExtent: double.maxFinite,
+            //       //长宽比
+            //       // childAspectRatio: (Random().nextDouble() * 5) + 1,
+            //       //列间距
+            //       crossAxisSpacing: 5,
+            //       //行间距
+            //       mainAxisSpacing: 10,
+            //       crossAxisCount: 2,
+            //     ),
+            //     itemBuilder: (context, index) {
+            //       return list_card(index);
+            //     },
+            //   ),
+            // ),
+            //     SliverGrid(
+            //   delegate: SliverChildBuilderDelegate((context, index) {
+            //     double height = (Random().nextInt(4) + 1) * 100;
+            //     print((Random().nextDouble() * 5) + 1);
+            //     return list_card(index);
+            //   }, childCount: 10),
+            //   gridDelegate: SliverWovenGridDelegate.count(
+            //     crossAxisCount: 2,
+            //     mainAxisSpacing: 8,
+            //     crossAxisSpacing: 8,
+            //     pattern: [
+            //       WovenGridTile(
+            //         1,
+            //         crossAxisRatio: 1,
+            //         alignment: AlignmentDirectional.center,
+            //       ),
+            //       WovenGridTile(
+            //         5 / 7,
+            //         crossAxisRatio: 0.9,
+            //         alignment: AlignmentDirectional.center,
+            //       ),
+            //     ],
+            //   ),
+            //   //     SliverGridDelegateWithFixedCrossAxisCount(
+            //   //   // mainAxisExtent: (Random().nextInt(4) + 1) * 100,
+            //   //   // ((Random().nextDouble() * 3) + 7) * 30
+            //   //   // maxCrossAxisExtent: double.maxFinite,
+            //   //   //长宽比
+            //   //   childAspectRatio: (Random().nextDouble() * 5) + 1,
+            //   //   //列间距
+            //   //   crossAxisSpacing: 5,
+            //   //   //行间距
+            //   //   mainAxisSpacing: 10,
+            //   //   crossAxisCount: 2,
+            //   // )
+            //   // SliverGridDelegateWithFixedCrossAxisCount(
+            //   //     crossAxisCount: 2,
+            //   //     crossAxisSpacing: 8,
+            //   //     mainAxisSpacing: 8,
+            //   //     childAspectRatio: 2)
+            //   //     ),
+            // ),
+            )
         // ),
         // ),
       ],
@@ -441,7 +547,25 @@ class _mainPageState extends State<mainPage>
             bottom: false,
             child: Builder(
               builder: (context) {
-                return CustomScrollView_joko(context);
+                return
+                    // MasonryGridView.count(
+                    //   physics: const BouncingScrollPhysics(),
+                    //   crossAxisCount: 2,
+                    //   mainAxisSpacing: 4,
+                    //   crossAxisSpacing: 4,
+                    //   itemBuilder: (context, index) {
+                    //     final height = (Random().nextInt(4) + 1) * 100;
+                    //     print(height);
+                    //     return Image.network(
+                    //       'https://picsum.photos/100/$height?random=$index',
+                    //       width: 100.toDouble(),
+                    //       height: height.toDouble(),
+                    //       fit: BoxFit.cover,
+                    //     );
+                    //   },
+                    //   itemCount: 10,
+                    // );
+                    CustomScrollView_joko(context);
               },
               // SliverGrid(
               //     delegate: SliverChildBuilderDelegate((context, index) {
@@ -540,116 +664,168 @@ class _mainPageState extends State<mainPage>
     );
   }
 
-  Container list_card(int index) {
+  Container list_card(int index, double height) {
     return Container(
-      // height: 500,
-      // decoration: BoxDecoration(
-      //     // shape: BoxShape.rectangle,
-      //     border: Border.all(),
-      //     borderRadius: BorderRadius.all(Radius.circular(5))),
-      // width: double.maxFinite,
-      // height: double.maxFinite,
-      // color: Color.fromARGB(255, Random().nextInt(256),
-      //     Random().nextInt(256), Random().nextInt(256)),
-      // child: Text("$index"),
-      child: LayoutBuilder(builder: (context, constrains) {
-        return GestureDetector(
-          onTap: () {
-            print(constrains);
-          },
-          child: Card(
-            clipBehavior: Clip.antiAlias,
-            child: Column(mainAxisSize: MainAxisSize.max, children: [
-              Container(
-                height: 200,
-                child: Swiper(
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return Image.network(
-                      'https://picsum.photos/200/300?random=$index',
-                      fit: BoxFit.cover,
-                    );
-                  },
-                  autoplay: false,
-                  //自动轮播
-                  onIndexChanged: (index) {},
-                  //引起下标变化的监听
-                  onTap: (index) {
-                    // Navigator.push(context,MaterialPageRoute(builder:(_)=>PhotoPreview(
-                    //       galleryItems:list,
-                    //       defaultImage: index,
-                    //     )));
-                  },
-                  //点击轮播时调用
-                  duration: 1000,
-                  //切换时的动画时间
-                  autoplayDelay: 2000,
-                  //自动播放间隔毫秒数.
-                  autoplayDisableOnInteraction: false,
-                  loop: true,
-                  //是否无限轮播
-                  scrollDirection: Axis.vertical,
-                  //滚动方向
-                  index: 0,
-                  //初始下标位置
-                  scale: 0.6,
-                  //轮播图之间的间距
-                  viewportFraction: 0.8,
-                  //当前视窗比例，小于1时就会在屏幕内，可以看见旁边的轮播图
-                  // indicatorLayout: PageIndicatorLayout.COLOR,
-                  pagination: new SwiperPagination(),
-                  //底部指示器
-                  // control: new SwiperControl(), //左右箭头
-                ),
-              ),
+        constraints: BoxConstraints(maxHeight: 200),
+        height: height,
+        // height: 500,
+        decoration: BoxDecoration(
+            // shape: BoxShape.rectangle,
+            border: Border.all(),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        width: double.maxFinite,
+        // height: double.maxFinite,r
+        // color: Color.fromARGB(255, Random().nextInt(256), Random().nextInt(256),
+        //     Random().nextInt(256)),
+        // child: Text("$index"),
+        child:
+            // Image.network(
+            //   filterQuality: FilterQuality.high,
+            //   'https://picsum.photos/300/300?random=$index',
+            //   fit: BoxFit.fitWidth,
+            //   alignment: Alignment.topCenter,
+            //   // width: 400,
+            //   // height: 400,
+            // )
+            LayoutBuilder(builder: (context, constrains) {
+          return GestureDetector(
+            onTap: () {},
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 6,
+                  // fit: FlexFit.tight,
+                  child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                      ),
+                      width: double.infinity,
+                      height: double.infinity,
 
-              // Image.network(
-              //   'https://picsum.photos/200/300?random=$index',
-              //   width: constrains.maxWidth,
-              //   // scale: 2,
-              //   // height: constrains.maxHeight,
-              //   // height: double.,
-              //   // width: width.toDouble(),
-              //   height: 150,
-              //   fit: BoxFit.cover,
-              // ),
-              const ListTile(
-                leading: Icon(Icons.album),
-                title: Text(
-                  'The Enchanted Nightingale',
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
+                      // height: 10,
+                      // height: ((Random().nextDouble() * 3) + 7) * 20,
+                      // padding: EdgeInsets.all(2),
+                      child: Image.network(
+                        filterQuality: FilterQuality.high,
+                        'https://picsum.photos/300/300?random=$index',
+                        fit: BoxFit.fitWidth,
+                        alignment: Alignment.topCenter,
+                        width: double.maxFinite,
+                      )),
                 ),
-                // subtitle: Text(
-                //     'Music by Julie Gable. Lyrics by Sidney Stein.'),
-              ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: <Widget>[
-              //     TextButton(
-              //       child: const Text('BUY TICKETS'),
-              //       onPressed: () {/* ... */},
-              //     ),
-              //     // Expanded(child: const SizedBox(width: 8)),
-              //     TextButton(
-              //       child: const Text('LISTEN'),
-              //       onPressed: () {/* ... */},
-              //     ),
-              //     const SizedBox(width: 8),
-              //   ],
-              // ),
-            ]),
-          ),
+                Expanded(
+                  // fit: FlexFit.tight,
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      'hello',
+                    ),
+                  ),
+                ),
+                // Flexible(
+                //   child: Text(
+                //     'hello',
+                //     textDirection: TextDirection.ltr,
+                //   ),
+                // ),
+                // Flexible(
+                //   child: Text(
+                //     'hello',
+                //     textDirection: TextDirection.ltr,
+                //   ),
+                // ),
+                // Flexible(
+                //   child: Text(
+                //     'hello',
+                //     textDirection: TextDirection.ltr,
+                //   ),
+                // ),
+                // Flexible(
+                //   child: Text(
+                //     'hello',
+                //     textDirection: TextDirection.ltr,
+                //   ),
+                // ),
+                // Flexible(
+                //   child: Text(
+                //     'hello',
+                //     textDirection: TextDirection.ltr,
+                //   ),
+                // )
+              ],
+            ),
+          );
+        })
+        //   return GestureDetector(
+        //     onTap: () {
+        //       print(constrains);
+        //       print(((Random().nextDouble() * 3) + 7) * 20);
+        //     },
+        //     child: Column(mainAxisSize: MainAxisSize.max, children: [
+        //       Flexible(
+        //         child: Container(
+        //             decoration: BoxDecoration(
+        //               border: Border.all(),
+        //             ),
+        //             width: double.infinity,
+
+        //             // height: ((Random().nextDouble() * 3) + 7) * 20,
+        //             padding: EdgeInsets.all(2),
+        //             child: Image.network(
+        //               'https://picsum.photos/300/300?random=$index',
+        //               fit: BoxFit.cover,
+        //               height: ((Random().nextDouble() * 3) + 7) * 20,
+        //             )),
+        //       ),
+
+        //       // Image.network(
+        //       //   'https://picsum.photos/200/300?random=$index',
+        //       //   width: constrains.maxWidth,
+        //       //   // scale: 2,
+        //       //   // height: constrains.maxHeight,
+        //       //   // height: double.,
+        //       //   // width: width.toDouble(),
+        //       //   height: 150,
+        //       //   fit: BoxFit.cover,
+        //       // ),
+        //       // const ListTile(
+        //       //   leading: Icon(Icons.album),
+        //       //   title: Text(
+        //       //     'The Enchanted Nightingale',
+        //       //     softWrap: false,
+        //       //     overflow: TextOverflow.ellipsis,
+        //       //   ),
+        //       //   // subtitle: Text(
+        //       //   //     'Music by Julie Gable. Lyrics by Sidney Stein.'),
+        //       // ),
+        //       // Row(
+        //       //   mainAxisAlignment: MainAxisAlignment.end,
+        //       //   children: <Widget>[
+        //       //     TextButton(
+        //       //       child: const Text('BUY TICKETS'),
+        //       //       onPressed: () {/* ... */},
+        //       //     ),
+        //       //     // Expanded(child: const SizedBox(width: 8)),
+        //       //     TextButton(
+        //       //       child: const Text('LISTEN'),
+        //       //       onPressed: () {/* ... */},
+        //       //     ),
+        //       //     const SizedBox(width: 8),
+        //       //   ],
+        //       // ),
+        //     ]),
+        //   );
+        // }),
+
+        //     Image.network(/
+        //   'https://picsum.photos/200/300?random=$index',
+        //   // width: width.toDouble(),
+        //   // height: height.toDouble(),
+        //   fit: BoxFit.fill,
+        // )
         );
-      }),
-
-      //     Image.network(/
-      //   'https://picsum.photos/200/300?random=$index',
-      //   // width: width.toDouble(),
-      //   // height: height.toDouble(),
-      //   fit: BoxFit.fill,
-      // )
-    );
   }
 }
 
@@ -714,4 +890,45 @@ Widget slide() {
     child: const ListTile(title: Text('Slide me'), focusColor: Colors.red),
   );
 }
+
 //body
+class ProxyClass extends MultiChildLayoutDelegate {
+  int num;
+  int columnNum;
+  int padding;
+
+  ProxyClass(this.num, this.columnNum, this.padding);
+
+  @override
+  void performLayout(Size size) {
+    double lastWidth = size.width - columnNum * padding;
+    double itemWidth = lastWidth / columnNum;
+    double offsetX = 0;
+    List columnH = List.generate(columnNum, (index) {
+      return 0.0;
+    });
+    for (int i = 0; i < num; i++) {
+      int ys = i % columnNum;
+      print("$ys === ${columnH[ys]}");
+      Size itemSize = layoutChild(
+          "id_$i",
+          BoxConstraints(
+              minWidth: itemWidth,
+              maxWidth: itemWidth,
+              minHeight: 0,
+              maxHeight: 1000));
+      positionChild("id_$i", Offset(offsetX + padding * 0.5, columnH[ys]));
+      offsetX += padding + itemWidth;
+      if (offsetX >= size.width - 1) {
+        offsetX = 0;
+      }
+      columnH[ys] += itemSize.height + padding;
+      print("size : ${columnH[ys]}----$offsetX");
+    }
+  }
+
+  @override
+  bool shouldRelayout(covariant MultiChildLayoutDelegate oldDelegate) {
+    return true;
+  }
+}

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -349,6 +350,7 @@ class _mainPageState extends State<mainPage>
 
   CustomScrollView CustomScrollView_joko(context) {
     double height = (Random().nextInt(4) + 1) * 100;
+    var _listkey = GlobalKey();
     final items = List.generate(100, (index) {
       int ys = index % 8 + 1;
       return LayoutId(
@@ -387,25 +389,29 @@ class _mainPageState extends State<mainPage>
             padding: EdgeInsets.all(4),
             sliver: SliverFillRemaining(
               // fillOverscroll: true,
-              child: MasonryGridView.count(
-                controller: widget.con,
-                // 展示几列
-                crossAxisCount: 2,
-                // 元素总个数
-                itemCount: 20,
-                // 单个子元素
-                itemBuilder: (BuildContext context, int index) {
-                  print(height);
-                  return list_card(index, (Random().nextInt(4) + 1) * 100);
-                },
-                // 纵向元素间距
-                mainAxisSpacing: 10,
-                // 横向元素间距
-                crossAxisSpacing: 10,
-                //本身不滚动，让外面的singlescrollview来滚动
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true, //收缩，让元素宽度自适应
-              ),
+              child: LayoutBuilder(builder: (context, constraints) {
+                print('object');
+                return MasonryGridView.count(
+                  key: _listkey,
+                  controller: widget.con,
+                  // 展示几列
+                  crossAxisCount: 2,
+                  // 元素总个数
+                  itemCount: 20,
+                  // 单个子元素
+                  itemBuilder: (BuildContext context, int index) {
+                    print('$height:$index');
+                    return list_card(index, (Random().nextInt(4) + 1) * 60);
+                  },
+                  // 纵向元素间距
+                  mainAxisSpacing: 10,
+                  // 横向元素间距
+                  crossAxisSpacing: 10,
+                  //本身不滚动，让外面的singlescrollview来滚动
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true, //收缩，让元素宽度自适应
+                );
+              }),
               // CustomMultiChildLayout(
               //   delegate: ProxyClass(items.length, 3, 5),
               //   children: items,
@@ -664,168 +670,73 @@ class _mainPageState extends State<mainPage>
     );
   }
 
-  Container list_card(int index, double height) {
-    return Container(
-        constraints: BoxConstraints(maxHeight: 200),
-        height: height,
-        // height: 500,
-        decoration: BoxDecoration(
-            // shape: BoxShape.rectangle,
-            border: Border.all(),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
-        width: double.maxFinite,
-        // height: double.maxFinite,r
-        // color: Color.fromARGB(255, Random().nextInt(256), Random().nextInt(256),
-        //     Random().nextInt(256)),
-        // child: Text("$index"),
-        child:
-            // Image.network(
-            //   filterQuality: FilterQuality.high,
-            //   'https://picsum.photos/300/300?random=$index',
-            //   fit: BoxFit.fitWidth,
-            //   alignment: Alignment.topCenter,
-            //   // width: 400,
-            //   // height: 400,
-            // )
-            LayoutBuilder(builder: (context, constrains) {
-          return GestureDetector(
-            onTap: () {},
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 6,
-                  // fit: FlexFit.tight,
-                  child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                      ),
-                      width: double.infinity,
-                      height: double.infinity,
+  IntrinsicHeight list_card(int index, double height) {
+    return IntrinsicHeight(
+        child: GestureDetector(
+      onTap: () {},
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+                width: double.infinity,
+                // height: height,
 
-                      // height: 10,
-                      // height: ((Random().nextDouble() * 3) + 7) * 20,
-                      // padding: EdgeInsets.all(2),
-                      child: Image.network(
-                        filterQuality: FilterQuality.high,
-                        'https://picsum.photos/300/300?random=$index',
-                        fit: BoxFit.fitWidth,
-                        alignment: Alignment.topCenter,
-                        width: double.maxFinite,
-                      )),
-                ),
-                Expanded(
-                  // fit: FlexFit.tight,
-                  child: Container(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      'hello',
-                    ),
-                  ),
-                ),
-                // Flexible(
-                //   child: Text(
-                //     'hello',
-                //     textDirection: TextDirection.ltr,
-                //   ),
-                // ),
-                // Flexible(
-                //   child: Text(
-                //     'hello',
-                //     textDirection: TextDirection.ltr,
-                //   ),
-                // ),
-                // Flexible(
-                //   child: Text(
-                //     'hello',
-                //     textDirection: TextDirection.ltr,
-                //   ),
-                // ),
-                // Flexible(
-                //   child: Text(
-                //     'hello',
-                //     textDirection: TextDirection.ltr,
-                //   ),
-                // ),
-                // Flexible(
-                //   child: Text(
-                //     'hello',
-                //     textDirection: TextDirection.ltr,
-                //   ),
-                // )
-              ],
+                // height: 10,
+                // height: ((Random().nextDouble() * 3) + 7) * 20,
+                // padding: EdgeInsets.all(2),
+                child: Image.network(
+                  filterQuality: FilterQuality.high,
+                  'https://picsum.photos/300/300?random=$index',
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                  // width: double.maxFinite,
+                  height: height,
+                )),
+          ),
+          Container(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+              'hello$index',
             ),
-          );
-        })
-        //   return GestureDetector(
-        //     onTap: () {
-        //       print(constrains);
-        //       print(((Random().nextDouble() * 3) + 7) * 20);
-        //     },
-        //     child: Column(mainAxisSize: MainAxisSize.max, children: [
-        //       Flexible(
-        //         child: Container(
-        //             decoration: BoxDecoration(
-        //               border: Border.all(),
-        //             ),
-        //             width: double.infinity,
-
-        //             // height: ((Random().nextDouble() * 3) + 7) * 20,
-        //             padding: EdgeInsets.all(2),
-        //             child: Image.network(
-        //               'https://picsum.photos/300/300?random=$index',
-        //               fit: BoxFit.cover,
-        //               height: ((Random().nextDouble() * 3) + 7) * 20,
-        //             )),
-        //       ),
-
-        //       // Image.network(
-        //       //   'https://picsum.photos/200/300?random=$index',
-        //       //   width: constrains.maxWidth,
-        //       //   // scale: 2,
-        //       //   // height: constrains.maxHeight,
-        //       //   // height: double.,
-        //       //   // width: width.toDouble(),
-        //       //   height: 150,
-        //       //   fit: BoxFit.cover,
-        //       // ),
-        //       // const ListTile(
-        //       //   leading: Icon(Icons.album),
-        //       //   title: Text(
-        //       //     'The Enchanted Nightingale',
-        //       //     softWrap: false,
-        //       //     overflow: TextOverflow.ellipsis,
-        //       //   ),
-        //       //   // subtitle: Text(
-        //       //   //     'Music by Julie Gable. Lyrics by Sidney Stein.'),
-        //       // ),
-        //       // Row(
-        //       //   mainAxisAlignment: MainAxisAlignment.end,
-        //       //   children: <Widget>[
-        //       //     TextButton(
-        //       //       child: const Text('BUY TICKETS'),
-        //       //       onPressed: () {/* ... */},
-        //       //     ),
-        //       //     // Expanded(child: const SizedBox(width: 8)),
-        //       //     TextButton(
-        //       //       child: const Text('LISTEN'),
-        //       //       onPressed: () {/* ... */},
-        //       //     ),
-        //       //     const SizedBox(width: 8),
-        //       //   ],
-        //       // ),
-        //     ]),
-        //   );
-        // }),
-
-        //     Image.network(/
-        //   'https://picsum.photos/200/300?random=$index',
-        //   // width: width.toDouble(),
-        //   // height: height.toDouble(),
-        //   fit: BoxFit.fill,
-        // )
-        );
+          ),
+          // Flexible(
+          //   child: Text(
+          //     'hello',
+          //     textDirection: TextDirection.ltr,
+          //   ),
+          // ),
+          // Flexible(
+          //   child: Text(
+          //     'hello',
+          //     textDirection: TextDirection.ltr,
+          //   ),
+          // ),
+          // Flexible(
+          //   child: Text(
+          //     'hello',
+          //     textDirection: TextDirection.ltr,
+          //   ),
+          // ),
+          // Flexible(
+          //   child: Text(
+          //     'hello',
+          //     textDirection: TextDirection.ltr,
+          //   ),
+          // ),
+          // Flexible(
+          //   child: Text(
+          //     'hello',
+          //     textDirection: TextDirection.ltr,
+          //   ),
+          // )
+        ],
+      ),
+    ));
   }
 }
 

@@ -72,14 +72,29 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   //   //   ..repeat(reverse: true);
   // }
   late TabController tabController;
-  late ScrollController _primaryScrollController;
+  late ScrollController _primaryScrollController = ScrollController();
   @override
   void initState() {
-    _primaryScrollController = ScrollController();
+    // _primaryScrollController = ScrollController();
     super.initState();
+    // if (_primaryScrollController.position.pixels > 300) {
+    //   _primaryScrollController.animateTo(
+    //     0.00,
+    //     duration: const Duration(milliseconds: 4000),
+    //     curve: Curves.easeOutBack, // TODO(ianh): Use a more appropriate curve.
+    //   );
+    // }
     tabController = TabController(length: 3, vsync: this);
     // _primaryScrollController.addListener(() {
     //   print(_primaryScrollController.position.pixels);
+    //   // if (_primaryScrollController.position.pixels > 300) {
+    //   //   _primaryScrollController.animateTo(
+    //   //     0.00,
+    //   //     duration: const Duration(milliseconds: 4000),
+    //   //     curve:
+    //   //         Curves.easeOutBack, // TODO(ianh): Use a more appropriate curve.
+    //   //   );
+    //   // }
     // });
   }
 
@@ -93,9 +108,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void _handleStatusBarTap() {
     // print(_primaryScrollController.hasClients);
     if (_primaryScrollController.hasClients) {
+      print('animatetOP');
       _primaryScrollController.animateTo(
         0.00,
-        duration: const Duration(milliseconds: 1500),
+        duration: const Duration(milliseconds: 2000),
         curve: Curves.easeOutBack, // TODO(ianh): Use a more appropriate curve.
       );
     }
@@ -312,10 +328,10 @@ class _mainPageState extends State<mainPage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _scrollController = ScrollController();
-
-    // ..addListener(() {
-    //   print(_scrollController.position.pixels);
-    // });
+    widget.con = ScrollController()
+      ..addListener(() {
+        print(widget.con.position.pixels);
+      });
     // widget.con.addListener(() {
     //   print(widget.con.position.pixels);
     // });
@@ -339,7 +355,7 @@ class _mainPageState extends State<mainPage>
           return <Widget>[
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: appBar_joko(),
+              sliver: appBar_joko(innerBoxIsScrolled),
             )
           ];
         },
@@ -350,6 +366,8 @@ class _mainPageState extends State<mainPage>
 
   CustomScrollView CustomScrollView_joko(context) {
     double height = (Random().nextInt(4) + 1) * 100;
+    final _scorll = ScrollController();
+
     var _listkey = GlobalKey();
     final items = List.generate(100, (index) {
       int ys = index % 8 + 1;
@@ -386,136 +404,159 @@ class _mainPageState extends State<mainPage>
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
         ),
         SliverPadding(
-            padding: EdgeInsets.all(4),
-            sliver: SliverFillRemaining(
-              // fillOverscroll: true,
-              child: LayoutBuilder(builder: (context, constraints) {
-                print('object');
-                return MasonryGridView.count(
-                  key: _listkey,
-                  controller: widget.con,
-                  // 展示几列
-                  crossAxisCount: 2,
-                  // 元素总个数
-                  itemCount: 20,
-                  // 单个子元素
-                  itemBuilder: (BuildContext context, int index) {
-                    print('$height:$index');
-                    return list_card(index, (Random().nextInt(4) + 1) * 60);
-                  },
-                  // 纵向元素间距
-                  mainAxisSpacing: 10,
-                  // 横向元素间距
-                  crossAxisSpacing: 10,
-                  //本身不滚动，让外面的singlescrollview来滚动
-                  physics: ScrollPhysics(),
-                  shrinkWrap: true, //收缩，让元素宽度自适应
-                );
-              }),
-              // CustomMultiChildLayout(
-              //   delegate: ProxyClass(items.length, 3, 5),
-              //   children: items,
-              // ),
-            )
+          padding: EdgeInsets.all(4),
+          sliver: SliverGrid(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                return list_card(index);
+              }, childCount: 20),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                mainAxisExtent: 300,
+                // maxCrossAxisExtent: double.maxFinite,
+                //长宽比
+                childAspectRatio: 1.5,
+                //列间距
+                crossAxisSpacing: 5,
+                //行间距
+                mainAxisSpacing: 10,
+                crossAxisCount: 2,
+              )
+              // SliverGridDelegateWithFixedCrossAxisCount(
+              //     crossAxisCount: 2,
+              //     crossAxisSpacing: 8,
+              //     mainAxisSpacing: 8,
+              //     childAspectRatio: 2)
+              //     ),
+              ),
+          // SliverFillRemaining(
+          //     // hasScrollBody: false,
+          //     fillOverscroll: true,
+          //     child: MasonryGridView.builder(
+          //       key: _listkey,
+          //       controller: _scrollController,
+          //       // 展示几列
+          //       // crossAxisCount: 2,
+          //       // 元素总个数
+          //       itemCount: 50,
+          //       // 单个子元素
+          //       itemBuilder: (BuildContext context, int index) {
+          //         print('$height:$index');
+          //         return list_card(index);
+          //       },
+          //       // 纵向元素间距
+          //       mainAxisSpacing: 10,
+          //       // 横向元素间距
+          //       crossAxisSpacing: 10,
+          //       //本身不滚动，让外面的singlescrollview来滚动
+          //       physics: BouncingScrollPhysics(),
+          //       shrinkWrap: true,
+          //       gridDelegate:
+          //           SliverSimpleGridDelegateWithFixedCrossAxisCount(
+          //               crossAxisCount: 2), //收缩，让元素宽度自适应
+          //     )
+          //     // CustomMultiChildLayout(
+          //     //   delegate: ProxyClass(items.length, 3, 5),
+          //     //   children: items,
+          //     // ),
+          //     )
 
-            // SliverList(
-            //   delegate: SliverChildBuilderDelegate((context, index) {
-            //     double height = (Random().nextInt(4) + 1) * 100;
-            //     print((Random().nextDouble() * 5) + 1);
-            //     return list_card(index, height);
-            //   }, childCount: 10),
-            // )
-            // SliverAnimatedList(
-            //   key: _listKey,
-            //   initialItemCount: 1,
-            //   itemBuilder: (context, index, Animation<double> animation) {
-            //     return list_card(index);
-            //   },
-            // ),
-            //     SliverFillRemaining(
-            //   fillOverscroll: true,
-            //   child: MasonryGridView.count(
-            //     // physics: const BouncingScrollPhysics(),
-            //     crossAxisCount: 2,
-            //     mainAxisSpacing: 4,
-            //     crossAxisSpacing: 4,
-            //     itemBuilder: (context, index) {
-            //       final height = (Random().nextInt(4) + 1) * 100;
-            //       print(height);
-            //       return Image.network(
-            //         'https://picsum.photos/100/$height?random=$index',
-            //         width: 100.toDouble(),
-            //         height: height.toDouble(),
-            //         fit: BoxFit.cover,
-            //       );
-            //     },
-            //     itemCount: 50,
-            //   ),
-            // )
-            //     SliverFillRemaining(
-            //   fillOverscroll: true,
-            //   child: GridView.builder(
-            //     shrinkWrap: true,
-            //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //       // mainAxisExtent: (Random().nextInt(4) + 1) * 100,
-            //       // ((Random().nextDouble() * 3) + 7) * 30
-            //       // maxCrossAxisExtent: double.maxFinite,
-            //       //长宽比
-            //       // childAspectRatio: (Random().nextDouble() * 5) + 1,
-            //       //列间距
-            //       crossAxisSpacing: 5,
-            //       //行间距
-            //       mainAxisSpacing: 10,
-            //       crossAxisCount: 2,
-            //     ),
-            //     itemBuilder: (context, index) {
-            //       return list_card(index);
-            //     },
-            //   ),
-            // ),
-            //     SliverGrid(
-            //   delegate: SliverChildBuilderDelegate((context, index) {
-            //     double height = (Random().nextInt(4) + 1) * 100;
-            //     print((Random().nextDouble() * 5) + 1);
-            //     return list_card(index);
-            //   }, childCount: 10),
-            //   gridDelegate: SliverWovenGridDelegate.count(
-            //     crossAxisCount: 2,
-            //     mainAxisSpacing: 8,
-            //     crossAxisSpacing: 8,
-            //     pattern: [
-            //       WovenGridTile(
-            //         1,
-            //         crossAxisRatio: 1,
-            //         alignment: AlignmentDirectional.center,
-            //       ),
-            //       WovenGridTile(
-            //         5 / 7,
-            //         crossAxisRatio: 0.9,
-            //         alignment: AlignmentDirectional.center,
-            //       ),
-            //     ],
-            //   ),
-            //   //     SliverGridDelegateWithFixedCrossAxisCount(
-            //   //   // mainAxisExtent: (Random().nextInt(4) + 1) * 100,
-            //   //   // ((Random().nextDouble() * 3) + 7) * 30
-            //   //   // maxCrossAxisExtent: double.maxFinite,
-            //   //   //长宽比
-            //   //   childAspectRatio: (Random().nextDouble() * 5) + 1,
-            //   //   //列间距
-            //   //   crossAxisSpacing: 5,
-            //   //   //行间距
-            //   //   mainAxisSpacing: 10,
-            //   //   crossAxisCount: 2,
-            //   // )
-            //   // SliverGridDelegateWithFixedCrossAxisCount(
-            //   //     crossAxisCount: 2,
-            //   //     crossAxisSpacing: 8,
-            //   //     mainAxisSpacing: 8,
-            //   //     childAspectRatio: 2)
-            //   //     ),
-            // ),
-            )
+          // SliverList(
+          //   delegate: SliverChildBuilderDelegate((context, index) {
+          //     double height = (Random().nextInt(4) + 1) * 100;
+          //     print((Random().nextDouble() * 5) + 1);
+          //     return list_card(index, height);
+          //   }, childCount: 10),
+          // )
+          // SliverAnimatedList(
+          //   key: _listKey,
+          //   initialItemCount: 1,
+          //   itemBuilder: (context, index, Animation<double> animation) {
+          //     return list_card(index);
+          //   },
+          // ),
+          //     SliverFillRemaining(
+          //   fillOverscroll: true,
+          //   child: MasonryGridView.count(
+          //     // physics: const BouncingScrollPhysics(),
+          //     crossAxisCount: 2,
+          //     mainAxisSpacing: 4,
+          //     crossAxisSpacing: 4,
+          //     itemBuilder: (context, index) {
+          //       final height = (Random().nextInt(4) + 1) * 100;
+          //       print(height);
+          //       return Image.network(
+          //         'https://picsum.photos/100/$height?random=$index',
+          //         width: 100.toDouble(),
+          //         height: height.toDouble(),
+          //         fit: BoxFit.cover,
+          //       );
+          //     },
+          //     itemCount: 50,
+          //   ),
+          // )
+          //     SliverFillRemaining(
+          //   fillOverscroll: true,
+          //   child: GridView.builder(
+          //     shrinkWrap: true,
+          //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //       // mainAxisExtent: (Random().nextInt(4) + 1) * 100,
+          //       // ((Random().nextDouble() * 3) + 7) * 30
+          //       // maxCrossAxisExtent: double.maxFinite,
+          //       //长宽比
+          //       // childAspectRatio: (Random().nextDouble() * 5) + 1,
+          //       //列间距
+          //       crossAxisSpacing: 5,
+          //       //行间距
+          //       mainAxisSpacing: 10,
+          //       crossAxisCount: 2,
+          //     ),
+          //     itemBuilder: (context, index) {
+          //       return list_card(index);
+          //     },
+          //   ),
+          // ),
+          //     SliverGrid(
+          //   delegate: SliverChildBuilderDelegate((context, index) {
+          //     double height = (Random().nextInt(4) + 1) * 100;
+          //     print((Random().nextDouble() * 5) + 1);
+          //     return list_card(index);
+          //   }, childCount: 10),
+          //   gridDelegate: SliverWovenGridDelegate.count(
+          //     crossAxisCount: 2,
+          //     mainAxisSpacing: 8,
+          //     crossAxisSpacing: 8,
+          //     pattern: [
+          //       WovenGridTile(
+          //         1,
+          //         crossAxisRatio: 1,
+          //         alignment: AlignmentDirectional.center,
+          //       ),
+          //       WovenGridTile(
+          //         5 / 7,
+          //         crossAxisRatio: 0.9,
+          //         alignment: AlignmentDirectional.center,
+          //       ),
+          //     ],
+          //   ),
+          //   //     SliverGridDelegateWithFixedCrossAxisCount(
+          //   //   // mainAxisExtent: (Random().nextInt(4) + 1) * 100,
+          //   //   // ((Random().nextDouble() * 3) + 7) * 30
+          //   //   // maxCrossAxisExtent: double.maxFinite,
+          //   //   //长宽比
+          //   //   childAspectRatio: (Random().nextDouble() * 5) + 1,
+          //   //   //列间距
+          //   //   crossAxisSpacing: 5,
+          //   //   //行间距
+          //   //   mainAxisSpacing: 10,
+          //   //   crossAxisCount: 2,
+          //   // )
+          //   // SliverGridDelegateWithFixedCrossAxisCount(
+          //   //     crossAxisCount: 2,
+          //   //     crossAxisSpacing: 8,
+          //   //     mainAxisSpacing: 8,
+          //   //     childAspectRatio: 2)
+          //   //     ),
+          // ),
+        )
         // ),
         // ),
       ],
@@ -604,10 +645,12 @@ class _mainPageState extends State<mainPage>
         ]);
   }
 
-  SliverAppBar appBar_joko() {
+  SliverAppBar appBar_joko(innerBoxIsScrolled) {
     return SliverAppBar(
+      floating: true,
+      snap: true,
       bottom: TabBar(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           // enableFeedback: true,
           onTap: (value) {
             if (value == 0 && widget.con.hasClients) {
@@ -645,8 +688,9 @@ class _mainPageState extends State<mainPage>
           icon: Icon(Icons.ac_unit)),
       expandedHeight: 200,
       centerTitle: true,
+      forceElevated: innerBoxIsScrolled,
       // title: Text("nihao"),
-      floating: true,
+      // floating: true,
       pinned: true,
       // snap: true,
       stretch: true,
@@ -670,12 +714,16 @@ class _mainPageState extends State<mainPage>
     );
   }
 
-  IntrinsicHeight list_card(int index, double height) {
+  IntrinsicHeight list_card(int index) {
+    final _listHeight = <int>[100, 200, 200, 300, 400, 200, 300, 400, 200, 100];
     return IntrinsicHeight(
         child: GestureDetector(
-      onTap: () {},
+      onTap: () {
+        _scrollController.animateTo(0.00,
+            duration: Duration(seconds: 2), curve: Curves.easeOutBack);
+      },
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        // mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
@@ -689,13 +737,15 @@ class _mainPageState extends State<mainPage>
                 // height: 10,
                 // height: ((Random().nextDouble() * 3) + 7) * 20,
                 // padding: EdgeInsets.all(2),
-                child: Image.network(
-                  filterQuality: FilterQuality.high,
-                  'https://picsum.photos/300/300?random=$index',
-                  fit: BoxFit.cover,
-                  alignment: Alignment.topCenter,
-                  // width: double.maxFinite,
-                  height: height,
+                child: Card(
+                  child: Image.network(
+                    filterQuality: FilterQuality.high,
+                    'https://picsum.photos/300/300?random=$index',
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
+                    // width: double.maxFinite,
+                    height: index % 2 == 0 ? 200 : 300,
+                  ),
                 )),
           ),
           Container(

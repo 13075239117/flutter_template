@@ -35,6 +35,8 @@ class MyApp extends StatelessWidget {
               centerTitle: true,
               systemOverlayStyle: SystemUiOverlayStyle.dark //设置状态栏的背景
               ),
+          scaffoldBackgroundColor: Colors.grey[200],
+          primaryColor: Colors.red,
           visualDensity: VisualDensity.standard),
     );
   }
@@ -318,6 +320,9 @@ class _mainPageState extends State<mainPage>
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late TabController _tabController;
   late ScrollController _scrollController;
+  late AnimationController _animationController;
+  late Animation animation;
+  late CurvedAnimation _curvedAnimation;
   var keyi = GlobalKey();
   @override
   // TODO: implement wantKeepAlive
@@ -330,8 +335,23 @@ class _mainPageState extends State<mainPage>
     _scrollController = ScrollController();
     widget.con = ScrollController()
       ..addListener(() {
-        print(widget.con.position.pixels);
+        // print(widget.con.position.pixels);
       });
+
+    //动画
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 3))
+          ..addListener(() {
+            setState(() {});
+          });
+    animation = ColorTween(begin: Colors.red, end: Colors.blue)
+        .animate(_animationController)
+      ..addListener(() {
+        // setState(() {});
+      });
+    // _animationController.forward();
+    _curvedAnimation =
+        CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
     // widget.con.addListener(() {
     //   print(widget.con.position.pixels);
     // });
@@ -339,10 +359,17 @@ class _mainPageState extends State<mainPage>
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _animationController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
-      color: Colors.white,
+      color: Colors.red,
       backgroundColor: Colors.blue,
       onRefresh: () async {
         print("123");
@@ -381,7 +408,7 @@ class _mainPageState extends State<mainPage>
           ));
     });
     return CustomScrollView(
-      // controller: widget.con,
+      controller: widget.con,
       physics: const BouncingScrollPhysics(),
       slivers: [
         // appBar_joko(),
@@ -405,74 +432,88 @@ class _mainPageState extends State<mainPage>
         ),
         SliverPadding(
           padding: EdgeInsets.all(4),
-          sliver: SliverGrid(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                return list_card(index);
-              }, childCount: 20),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                mainAxisExtent: 300,
-                // maxCrossAxisExtent: double.maxFinite,
-                //长宽比
-                childAspectRatio: 1.5,
-                //列间距
-                crossAxisSpacing: 5,
-                //行间距
-                mainAxisSpacing: 10,
-                crossAxisCount: 2,
-              )
-              // SliverGridDelegateWithFixedCrossAxisCount(
-              //     crossAxisCount: 2,
-              //     crossAxisSpacing: 8,
-              //     mainAxisSpacing: 8,
-              //     childAspectRatio: 2)
+          sliver:
+              // SliverGrid(
+              //     delegate: SliverChildBuilderDelegate((context, index) {
+              //       return list_card(index);
+              //     }, childCount: 20),
+              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //       mainAxisExtent: 300,
+              //       // maxCrossAxisExtent: double.maxFinite,
+              //       //长宽比
+              //       childAspectRatio: 1.5,
+              //       //列间距
+              //       crossAxisSpacing: 5,
+              //       //行间距
+              //       mainAxisSpacing: 10,
+              //       crossAxisCount: 2,
+              //     )
+              //     // SliverGridDelegateWithFixedCrossAxisCount(
+              //     //     crossAxisCount: 2,
+              //     //     crossAxisSpacing: 8,
+              //     //     mainAxisSpacing: 8,
+              //     //     childAspectRatio: 2)
+              //     //     ),
               //     ),
-              ),
-          // SliverFillRemaining(
-          //     // hasScrollBody: false,
-          //     fillOverscroll: true,
-          //     child: MasonryGridView.builder(
-          //       key: _listkey,
-          //       controller: _scrollController,
-          //       // 展示几列
-          //       // crossAxisCount: 2,
-          //       // 元素总个数
-          //       itemCount: 50,
-          //       // 单个子元素
-          //       itemBuilder: (BuildContext context, int index) {
-          //         print('$height:$index');
-          //         return list_card(index);
-          //       },
-          //       // 纵向元素间距
-          //       mainAxisSpacing: 10,
-          //       // 横向元素间距
-          //       crossAxisSpacing: 10,
-          //       //本身不滚动，让外面的singlescrollview来滚动
-          //       physics: BouncingScrollPhysics(),
-          //       shrinkWrap: true,
-          //       gridDelegate:
-          //           SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          //               crossAxisCount: 2), //收缩，让元素宽度自适应
-          //     )
-          //     // CustomMultiChildLayout(
-          //     //   delegate: ProxyClass(items.length, 3, 5),
-          //     //   children: items,
-          //     // ),
-          //     )
+              // SliverFillRemaining(
+              //     // hasScrollBody: false,
+              //     fillOverscroll: true,
+              //     child: LayoutBuilder(builder: (context, constraints) {
+              //       return ConstrainedBox(
+              //         constraints: BoxConstraints(
+              //           minHeight: constraints.maxHeight,
+              //         ),
+              //         child: MasonryGridView.builder(
+              //           key: _listkey,
+              //           controller: _scrollController,
+              //           // 展示几列
+              //           // crossAxisCount: 2,
+              //           // 元素总个数
+              //           itemCount: 50,
+              //           // 单个子元素
+              //           itemBuilder: (BuildContext context, int index) {
+              //             print('$height:$index');
+              //             return list_card(index);
+              //           },
+              //           // 纵向元素间距
+              //           mainAxisSpacing: 10,
+              //           // 横向元素间距
+              //           crossAxisSpacing: 10,
+              //           //本身不滚动，让外面的singlescrollview来滚动
+              //           physics: BouncingScrollPhysics(),
+              //           shrinkWrap: true,
+              //           gridDelegate:
+              //               SliverSimpleGridDelegateWithFixedCrossAxisCount(
+              //                   crossAxisCount: 2), //收缩，让元素宽度自适应
+              //         ),
+              //       );
+              //     })
+              //     // CustomMultiChildLayout(
+              //     //   delegate: ProxyClass(items.length, 3, 5),
+              //     //   children: items,
+              //     // ),
+              //     ),
 
-          // SliverList(
-          //   delegate: SliverChildBuilderDelegate((context, index) {
-          //     double height = (Random().nextInt(4) + 1) * 100;
-          //     print((Random().nextDouble() * 5) + 1);
-          //     return list_card(index, height);
-          //   }, childCount: 10),
-          // )
-          // SliverAnimatedList(
-          //   key: _listKey,
-          //   initialItemCount: 1,
-          //   itemBuilder: (context, index, Animation<double> animation) {
-          //     return list_card(index);
-          //   },
-          // ),
+              //     SliverList(
+              //   key: _listKey,
+              //   delegate: SliverChildBuilderDelegate((context, index) {
+              //     double height = (Random().nextInt(4) + 1) * 100;
+              //     print('$index');
+              //     return FadeTransition(
+              //         opacity: _curvedAnimation, child: list_card(index));
+              //   }, childCount: 10),
+              // ),
+              SliverAnimatedList(
+            key: _listKey,
+            initialItemCount: 10,
+            itemBuilder: (context, index, Animation<double> animation) {
+              print('$index');
+              _animationController.forward();
+
+              return FadeTransition(
+                  opacity: _curvedAnimation, child: list_card(index));
+            },
+          ),
           //     SliverFillRemaining(
           //   fillOverscroll: true,
           //   child: MasonryGridView.count(
@@ -719,72 +760,184 @@ class _mainPageState extends State<mainPage>
     return IntrinsicHeight(
         child: GestureDetector(
       onTap: () {
-        _scrollController.animateTo(0.00,
-            duration: Duration(seconds: 2), curve: Curves.easeOutBack);
+        // _scrollController.animateTo(0.00,
+        //     duration: Duration(seconds: 2), curve: Curves.easeOutBack);
+        print(MediaQuery.of(context).size);
       },
-      child: Column(
-        // mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                ),
-                width: double.infinity,
-                // height: height,
-
-                // height: 10,
-                // height: ((Random().nextDouble() * 3) + 7) * 20,
-                // padding: EdgeInsets.all(2),
-                child: Card(
-                  child: Image.network(
-                    filterQuality: FilterQuality.high,
-                    'https://picsum.photos/300/300?random=$index',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topCenter,
-                    // width: double.maxFinite,
-                    height: index % 2 == 0 ? 200 : 300,
-                  ),
-                )),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            // border: Border.all(),
           ),
-          Container(
-            alignment: Alignment.bottomCenter,
-            child: Text(
-              'hello$index',
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                index % 2 == 0
+                    ? Text(
+                        " A given user's initials should always be paired with the same background color, for consistencytext$index",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      )
+                    : Text(
+                        " $index",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                SizedBox(height: 8),
+
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.red,
+                      backgroundImage: NetworkImage(
+                          'https://picsum.photos/300/300?random=$index'),
+                      // backgroundColor: Colors.brown.shade800,
+                      // child: const Text('AH'),s
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text(
+                        'fuck$index',
+                        style: TextStyle(wordSpacing: 5),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: 8),
+                Text('https://picsum.photos/300/300?random=$index',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    )),
+                Wrap(
+                  children: [
+                    Card(
+                        clipBehavior: Clip.antiAlias,
+                        // margin: EdgeInsets.all(0),
+                        child: Image.network(
+                          filterQuality: FilterQuality.high,
+                          'https://picsum.photos/300/300?random=$index',
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                          width: 100,
+                          height: 100,
+                        )),
+                    Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: Image.network(
+                          filterQuality: FilterQuality.high,
+                          'https://picsum.photos/300/300?random=${index + 1}',
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                          width: 100,
+                          height: 100,
+                        )),
+                    Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: Image.network(
+                          filterQuality: FilterQuality.high,
+                          'https://picsum.photos/300/300?random=${index + 2}',
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                          width: 100,
+                          height: 100,
+                        )),
+                    Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: Image.network(
+                          filterQuality: FilterQuality.high,
+                          'https://picsum.photos/300/300?random=${index + 3}',
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                          width: 100,
+                          height: 100,
+                        ))
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.favorite_border,
+                          color: animation.value,
+                        )),
+                    Icon(Icons.messenger_outline),
+                    IconButton(onPressed: () {}, icon: Icon(Icons.share)),
+                  ],
+                )
+                // Container(
+                //   width: double.infinity,
+                //   height: index % 2 == 0 ? 200 : 300,
+
+                //   // height: 10,
+                //   // height: ((Random().nextDouble() * 3) + 7) * 20,
+                //   // padding: EdgeInsets.all(2),
+                //   // child:
+                //   // Card(
+                //   //   child: Image.network(
+                //   //     filterQuality: FilterQuality.high,
+                //   //     'https://picsum.photos/300/300?random=$index',
+                //   //     fit: BoxFit.cover,
+                //   //     alignment: Alignment.topCenter,
+                //   //     // width: double.maxFinite,
+                //   //     height: index % 2 == 0 ? 200 : 300,
+                //   //   ),
+                //   // )
+                // ),
+                // Container(
+                //   alignment: Alignment.bottomCenter,
+                //   child: Text(
+                //     'hello$index',
+                //   ),
+                // ),
+                // Flexible(
+                //   child: Text(
+                //     'hello',
+                //     textDirection: TextDirection.ltr,
+                //   ),
+                // ),
+                // Flexible(
+                //   child: Text(
+                //     'hello',
+                //     textDirection: TextDirection.ltr,
+                //   ),
+                // ),
+                // Flexible(
+                //   child: Text(
+                //     'hello',
+                //     textDirection: TextDirection.ltr,
+                //   ),
+                // ),
+                // Flexible(
+                //   child: Text(
+                //     'hello',
+                //     textDirection: TextDirection.ltr,
+                //   ),
+                // ),
+                // Flexible(
+                //   child: Text(
+                //     'hello',
+                //     textDirection: TextDirection.ltr,
+                //   ),
+                // )
+              ],
             ),
           ),
-          // Flexible(
-          //   child: Text(
-          //     'hello',
-          //     textDirection: TextDirection.ltr,
-          //   ),
-          // ),
-          // Flexible(
-          //   child: Text(
-          //     'hello',
-          //     textDirection: TextDirection.ltr,
-          //   ),
-          // ),
-          // Flexible(
-          //   child: Text(
-          //     'hello',
-          //     textDirection: TextDirection.ltr,
-          //   ),
-          // ),
-          // Flexible(
-          //   child: Text(
-          //     'hello',
-          //     textDirection: TextDirection.ltr,
-          //   ),
-          // ),
-          // Flexible(
-          //   child: Text(
-          //     'hello',
-          //     textDirection: TextDirection.ltr,
-          //   ),
-          // )
-        ],
+        ),
       ),
     ));
   }
@@ -891,5 +1044,23 @@ class ProxyClass extends MultiChildLayoutDelegate {
   @override
   bool shouldRelayout(covariant MultiChildLayoutDelegate oldDelegate) {
     return true;
+  }
+}
+
+class show_list extends StatefulWidget {
+  show_list({Key? key}) : super(key: key);
+
+  @override
+  State<show_list> createState() => _show_listState();
+}
+
+class _show_listState extends State<show_list> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: (Random().nextInt(4) + 1) * 100,
+      width: double.infinity,
+      child: Column(),
+    );
   }
 }

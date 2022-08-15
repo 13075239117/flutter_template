@@ -12,6 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:template_1/pages/HomePage/homePage_joko.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "template_1",
-      home: MyHomePage(),
+      home: MyHomePage_joko(),
       theme: ThemeData(
           cardTheme: CardTheme(
             elevation: 5,

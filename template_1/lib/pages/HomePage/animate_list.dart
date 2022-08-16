@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:template_1/pages/HomePage/listDetail_joko.dart';
+import 'package:template_1/untils/router.dart';
 
 class animate_list extends StatefulWidget {
   late int index;
@@ -20,8 +22,9 @@ class _animate_listState extends State<animate_list>
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     _animationController.dispose();
+
+    super.dispose();
   }
 
   void initState() {
@@ -46,13 +49,43 @@ class _animate_listState extends State<animate_list>
     super.initState();
   }
 
-  IntrinsicHeight list_card(int index) {
+  @override
+  Widget build(BuildContext context) {
+    _animationController.forward();
+    return ScaleTransition(
+        scale: CurvedAnimation(
+          parent: _animationController,
+          curve: Curves.ease,
+        ),
+        // key: GlobalKey(),
+        // opacity: _curvedAnimation,
+        child: details(context: context, index: widget.index));
+  }
+}
+
+class details extends StatefulWidget {
+  const details({
+    Key? key,
+    required this.context,
+    required this.index,
+  }) : super(key: key);
+
+  final BuildContext context;
+  final int index;
+
+  @override
+  State<details> createState() => _detailsState();
+}
+
+class _detailsState extends State<details> {
+  @override
+  Widget build(BuildContext context) {
     // Future.delayed(Duration(milliseconds: 100), () {
     //   // add/remove item
     // });
     // _animationController.forward();
 
-    print("渲染$index");
+    print("渲染${widget.index}");
     final _listHeight = <int>[100, 200, 200, 300, 400, 200, 300, 400, 200, 100];
     return IntrinsicHeight(
         child: GestureDetector(
@@ -60,6 +93,13 @@ class _animate_listState extends State<animate_list>
         // _scrollController.animateTo(0.00,
         //     duration: Duration(seconds: 2), curve: Curves.easeOutBack);
         print(MediaQuery.of(context).size);
+        // push_joko(context, listDetail);
+        // Navigator.push(
+        //   context,
+        //   // Create the SelectionScreen in the next step.
+        //   MaterialPageRoute(builder: (context) => listDetail()),
+        // );
+        push_joko(context, listDetail);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -75,9 +115,9 @@ class _animate_listState extends State<animate_list>
               // mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                index % 2 == 0
+                widget.index % 2 == 0
                     ? Text(
-                        " A given user's initials should always be paired with the same background color, for consistencytext$index",
+                        " A given user's initials should always be paired with the same background color, for consistencytext${widget.index}",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -85,7 +125,7 @@ class _animate_listState extends State<animate_list>
                         ),
                       )
                     : Text(
-                        " $index",
+                        " ${widget.index}",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -98,21 +138,21 @@ class _animate_listState extends State<animate_list>
                     CircleAvatar(
                       backgroundColor: Colors.red,
                       backgroundImage: NetworkImage(
-                          'https://picsum.photos/300/300?random=$index'),
+                          'https://picsum.photos/300/300?random=${widget.index}'),
                       // backgroundColor: Colors.brown.shade800,
                       // child: const Text('AH'),s
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: Text(
-                        'fuck$index',
+                        'fuck${widget.index}',
                         style: TextStyle(wordSpacing: 5),
                       ),
                     )
                   ],
                 ),
                 SizedBox(height: 8),
-                Text('https://picsum.photos/300/300?random=$index',
+                Text('https://picsum.photos/300/300?random=${widget.index}',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 20,
@@ -124,7 +164,7 @@ class _animate_listState extends State<animate_list>
                         // margin: EdgeInsets.all(0),
                         child: Image.network(
                           filterQuality: FilterQuality.high,
-                          'https://picsum.photos/300/300?random=$index',
+                          'https://picsum.photos/300/300?random=${widget.index}',
                           fit: BoxFit.cover,
                           alignment: Alignment.topCenter,
                           width: 100,
@@ -134,7 +174,7 @@ class _animate_listState extends State<animate_list>
                         clipBehavior: Clip.antiAlias,
                         child: Image.network(
                           filterQuality: FilterQuality.high,
-                          'https://picsum.photos/300/300?random=${index + 1}',
+                          'https://picsum.photos/300/300?random=${widget.index + 1}',
                           fit: BoxFit.cover,
                           alignment: Alignment.topCenter,
                           width: 100,
@@ -144,7 +184,7 @@ class _animate_listState extends State<animate_list>
                         clipBehavior: Clip.antiAlias,
                         child: Image.network(
                           filterQuality: FilterQuality.high,
-                          'https://picsum.photos/300/300?random=${index + 2}',
+                          'https://picsum.photos/300/300?random=${widget.index + 2}',
                           fit: BoxFit.cover,
                           alignment: Alignment.topCenter,
                           width: 100,
@@ -154,7 +194,7 @@ class _animate_listState extends State<animate_list>
                         clipBehavior: Clip.antiAlias,
                         child: Image.network(
                           filterQuality: FilterQuality.high,
-                          'https://picsum.photos/300/300?random=${index + 3}',
+                          'https://picsum.photos/300/300?random=${widget.index + 3}',
                           fit: BoxFit.cover,
                           alignment: Alignment.topCenter,
                           width: 100,
@@ -183,16 +223,20 @@ class _animate_listState extends State<animate_list>
     ));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    _animationController.forward();
-    return ScaleTransition(
-        scale: CurvedAnimation(
-          parent: _animationController,
-          curve: Curves.ease,
-        ),
-        // key: GlobalKey(),
-        // opacity: _curvedAnimation,
-        child: list_card(widget.index));
+  Future<void> push_joko(BuildContext context, page) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final result = await Navigator.push(
+      context,
+      // Create the SelectionScreen in the next step.
+      MaterialPageRoute(
+          builder: (context) => listDetail(),
+          settings: RouteSettings(arguments: {'name': "ok", 'age': '24'})),
+    );
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('$result')));
+    print(mounted);
+    print(result);
   }
 }

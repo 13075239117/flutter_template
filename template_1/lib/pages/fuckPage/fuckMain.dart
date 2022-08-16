@@ -12,7 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:template_1/pages/HomePage/homePage_joko.dart';
+import 'package:template_1/pages/HomePage/index.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Todo {
   final String name;
@@ -26,6 +27,7 @@ class _listDetailState extends State<listDetail> {
           onPressed: () {
             // Close the screen and return "Yep!" as the result.
             Navigator.pop(context, 'return');
+            // context.pop();
           },
           child: ListTile(
             title: Text(todo['name']),

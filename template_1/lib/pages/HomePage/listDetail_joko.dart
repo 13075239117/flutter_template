@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:template_1/models/test.dart';
 
 class Todo {
   final String name;
@@ -7,16 +9,17 @@ class Todo {
   Todo(this.name, this.age);
 }
 
-class listDetail extends StatefulWidget {
+class listDetail extends StatefulHookConsumerWidget {
   listDetail({Key? key}) : super(key: key);
 
   @override
-  State<listDetail> createState() => _listDetailState();
+  _listDetailState createState() => _listDetailState();
 }
 
-class _listDetailState extends State<listDetail> {
+class _listDetailState extends ConsumerState<listDetail> {
   @override
   Widget build(BuildContext context) {
+    final value = ref.watch(helloWorldProvider);
     final todo = ModalRoute.of(context)!.settings.arguments as Map;
     print(todo['name']);
     return Scaffold(
@@ -28,7 +31,7 @@ class _listDetailState extends State<listDetail> {
             Navigator.pop(context, 'return');
           },
           child: ListTile(
-            title: Text(todo['name']),
+            title: Text("$value"),
             subtitle: Text(todo['age']),
           ),
         ),

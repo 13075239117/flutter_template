@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:template_1/models/test.dart';
 
+import 'animate_list/models/index.dart';
+
 class Todo {
   final String name;
   final String age;
@@ -20,6 +22,8 @@ class _listDetailState extends ConsumerState<listDetail> {
   @override
   Widget build(BuildContext context) {
     final value = ref.watch(helloWorldProvider);
+    final photo = ref.watch(detailProvoder);
+    print(photo);
     final todo = ModalRoute.of(context)!.settings.arguments as Map;
     print(todo['name']);
     return Scaffold(

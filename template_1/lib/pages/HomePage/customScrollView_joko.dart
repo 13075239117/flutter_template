@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:template_1/pages/HomePage/animate_list.dart';
+import 'package:template_1/pages/HomePage/animate_list/index.dart';
 
 class customScrollView_joko extends StatefulWidget {
   BuildContext context;
@@ -120,7 +120,7 @@ class _customScrollView_jokoState extends State<customScrollView_joko> {
               print('$index');
               // _animationController.forward();
 
-              return animate_list(
+              return new animate_list(
                 index: index,
                 animation: animation,
               );

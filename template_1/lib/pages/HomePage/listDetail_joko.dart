@@ -29,6 +29,7 @@ class _listDetailState extends ConsumerState<listDetail> {
           onPressed: () {
             // Close the screen and return "Yep!" as the result.
             Navigator.pop(context, 'return');
+            // context.pop();
           },
           child: ListTile(
             title: Text("$value"),

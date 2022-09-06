@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:template_1/pages/HomePage/listDetail_joko.dart';
+import 'package:template_1/services/request.dart';
 import 'package:template_1/untils/router.dart';
 
 class animate_list extends StatefulWidget {
@@ -78,6 +80,23 @@ class details extends StatefulWidget {
 }
 
 class _detailsState extends State<details> {
+  late Dio dio;
+  @override
+  void initState() async {
+    // TODO: implement initState
+    super.initState();
+    dio = DioRequest.getInstance().dio;
+    // var res = await dio
+    //     .get('http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}');
+    // print(res);
+  }
+
+  Future() async {
+    var res = await dio
+        .get('http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}');
+    print(res);
+  }
+
   @override
   Widget build(BuildContext context) {
     // Future.delayed(Duration(milliseconds: 100), () {

@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:template_1/models/test.dart';
+import 'package:template_1/services/request.dart';
 
 import 'animate_list/models/index.dart';
 
@@ -19,13 +23,44 @@ class listDetail extends StatefulHookConsumerWidget {
 }
 
 class _listDetailState extends ConsumerState<listDetail> {
+  late Map map;
+  List list = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    /// 页面渲染完成后回调
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _detail();
+    // });
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    print("更新！");
+    // _detail();
+    super.didChangeDependencies();
+  }
+
+  Future _detail() async {
+    late Dio dio = DioRequest.getInstance().dio;
+    final photo = ref.watch(detailProvoder);
+    var res = await dio.get(photo['imgURL']);
+    print(res);
+  }
+
   @override
   Widget build(BuildContext context) {
     final value = ref.watch(helloWorldProvider);
-    final photo = ref.watch(detailProvoder);
-    print(photo);
+    final photo = ref.watch(testProvoder);
+    // print(photo);
+    // print(photo.value?.data);
+    map = photo.value?.data as Map;
+    list = map['imgArr'];
+    print(list);
     final todo = ModalRoute.of(context)!.settings.arguments as Map;
-    print(todo['name']);
+    // print(todo['name']);
     return Scaffold(
       appBar: AppBar(),
       body: Center(
@@ -35,10 +70,17 @@ class _listDetailState extends ConsumerState<listDetail> {
             Navigator.pop(context, 'return');
             // context.pop();
           },
-          child: ListTile(
-            title: Text("$value"),
-            subtitle: Text(todo['age']),
+          child: ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Image(
+                  image: NetworkImage('http://dummyimage.com/400x400'));
+            },
           ),
+          //     ListTile(
+          //   title: Text("$value"),
+          //   subtitle: Text(todo['age']),
+          // ),
         ),
       ),
     );

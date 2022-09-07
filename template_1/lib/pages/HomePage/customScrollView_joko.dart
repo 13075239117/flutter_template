@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:template_1/pages/HomePage/animate_list/index.dart';
+import 'package:template_1/services/request.dart';
 
 class customScrollView_joko extends StatefulWidget {
   BuildContext context;
@@ -10,6 +12,15 @@ class customScrollView_joko extends StatefulWidget {
 }
 
 class _customScrollView_jokoState extends State<customScrollView_joko> {
+  // late Dio dio;
+  // @override
+  // void initState() async {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   dio = DioRequest.getInstance().dio;
+  //   var res = await dio.get('https://picsum.photos/300/300?random=1');
+  // }
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -120,7 +131,7 @@ class _customScrollView_jokoState extends State<customScrollView_joko> {
               print('$index');
               // _animationController.forward();
 
-              return new animate_list(
+              return animate_list(
                 index: index,
                 animation: animation,
               );

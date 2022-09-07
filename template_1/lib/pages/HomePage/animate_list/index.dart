@@ -93,11 +93,12 @@ class _detailsState extends ConsumerState<details> {
     // var res = await dio
     //     .get('http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}');
     // print(res);
-    map = ref.read(detailProvoder);
+
     map = {
-      'http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}':
-          widget.index.toString()
+      "imgURL":
+          'http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}'
     };
+    ref.read(detailProvoder.notifier).state = map;
   }
 
   Future _detail() async {
@@ -112,14 +113,14 @@ class _detailsState extends ConsumerState<details> {
     // });
     // _animationController.forward();
 
-    print("渲染${widget.index}");
+    // print("渲染${widget.index}");
     final _listHeight = <int>[100, 200, 200, 300, 400, 200, 300, 400, 200, 100];
     return IntrinsicHeight(
         child: GestureDetector(
       onTap: () {
         // _scrollController.animateTo(0.00,
         //     duration: Duration(seconds: 2), curve: Curves.easeOutBack);
-        print(MediaQuery.of(context).size);
+        // print(MediaQuery.of(context).size);
         // push_joko(context, listDetail);
         // Navigator.push(
         //   context,
@@ -190,6 +191,15 @@ class _detailsState extends ConsumerState<details> {
                         clipBehavior: Clip.antiAlias,
                         // margin: EdgeInsets.all(0),
                         child: Image.network(
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              "assets/images/top.png",
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
+                              width: 100,
+                              height: 100,
+                            );
+                          },
                           filterQuality: FilterQuality.high,
                           'https://picsum.photos/300/300?random=${widget.index}',
                           fit: BoxFit.cover,

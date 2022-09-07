@@ -16,7 +16,7 @@ class DioRequest {
     dio = Dio();
     dio.options = BaseOptions(
         baseUrl: DioConfig.baseURL,
-        connectTimeout: DioConfig.timeout,
+        // connectTimeout: DioConfig.timeout,
         sendTimeout: DioConfig.timeout,
         receiveTimeout: DioConfig.timeout,
         contentType: 'application/json; charset=utf-8',

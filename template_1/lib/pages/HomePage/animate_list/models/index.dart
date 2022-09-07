@@ -4,7 +4,7 @@ import 'package:template_1/services/request.dart';
 
 Dio dio = DioRequest.getInstance().dio;
 
-final detailProvoder = StateProvider(
+final detailProvoder = StateProvider.autoDispose(
   (ref) => {},
 );
 final testProvoder = FutureProvider.autoDispose(
@@ -14,7 +14,7 @@ final testProvoder = FutureProvider.autoDispose(
       // var res = await Dio()
       //   ..get(photo['imgURL'],
       //       options: Options(contentType: 'application/json; charset=utf-8'));
-      var res = await dio.get(photo['imgURL']);
+      var res = await dio.get("http://pic.bizhi360.com/litimg/10799.jpg");
       return res;
     } catch (e) {
       dio.close(force: true);

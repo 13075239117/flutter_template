@@ -58,7 +58,7 @@ class _listDetailState extends ConsumerState<listDetail> {
     // print(photo.value?.data);
     map = photo.value?.data as Map;
     list = map['imgArr'];
-    print(list);
+    print(list.length);
     final todo = ModalRoute.of(context)!.settings.arguments as Map;
     // print(todo['name']);
     return Scaffold(
@@ -73,8 +73,7 @@ class _listDetailState extends ConsumerState<listDetail> {
           child: ListView.builder(
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
-              return Image(
-                  image: NetworkImage('http://dummyimage.com/400x400'));
+              return Image(image: NetworkImage(list[index]));
             },
           ),
           //     ListTile(

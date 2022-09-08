@@ -4,17 +4,18 @@ import 'package:template_1/services/request.dart';
 
 Dio dio = DioRequest.getInstance().dio;
 
-final detailProvoder = StateProvider.autoDispose(
-  (ref) => {},
+final pageProvoder = StateProvider.autoDispose(
+  (ref) => 1,
 );
-final testProvoder = FutureProvider.autoDispose(
+final pageListProvoder = FutureProvider.autoDispose(
   (ref) async {
     try {
-      final photo = ref.watch(detailProvoder);
+      final pageList = ref.watch(pageProvoder);
       // var res = await Dio()
       //   ..get(photo['imgURL'],
       //       options: Options(contentType: 'application/json; charset=utf-8'));
-      var res = await dio.get("http://pic.bizhi360.com/litimg/10799.jpg");
+      Response res = await dio
+          .get("http://127.0.0.1:4523/mock/965395/mainPage?page=$pageProvoder");
       return res;
     } catch (e) {
       dio.close(force: true);

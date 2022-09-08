@@ -54,11 +54,14 @@ class _listDetailState extends ConsumerState<listDetail> {
   Widget build(BuildContext context) {
     final value = ref.watch(helloWorldProvider);
     final photo = ref.watch(testProvoder);
-    // print(photo);
+    print(photo);
     // print(photo.value?.data);
-    map = photo.value?.data as Map;
-    list = map['imgArr'];
-    print(list.length);
+    if (photo.value?.data != null) {
+      map = photo.value?.data as Map;
+      list = map['imgArr'];
+    }
+
+    print(list);
     final todo = ModalRoute.of(context)!.settings.arguments as Map;
     // print(todo['name']);
     return Scaffold(
@@ -70,12 +73,21 @@ class _listDetailState extends ConsumerState<listDetail> {
             Navigator.pop(context, 'return');
             // context.pop();
           },
-          child: ListView.builder(
-            itemCount: list.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Image(image: NetworkImage(list[index]));
-            },
-          ),
+          child: list.length > 0
+              ? ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Image(
+                        image: NetworkImage('http://dummyimage.com/400x400'));
+                  },
+                )
+              : Image.asset(
+                  "assets/images/top.png",
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                  width: 100,
+                  height: 100,
+                ),
           //     ListTile(
           //   title: Text("$value"),
           //   subtitle: Text(todo['age']),

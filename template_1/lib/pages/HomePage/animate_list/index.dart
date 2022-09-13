@@ -2,24 +2,31 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:template_1/pages/HomePage/customScrollView_joko/models/index.dart';
+import 'package:template_1/pages/HomePage/customScrollView_joko/models/model.dart';
 import 'package:template_1/pages/HomePage/listDetail_joko.dart';
 import 'package:template_1/services/request.dart';
 import 'package:template_1/untils/router.dart';
 
 import 'models/index.dart';
 
-class animate_list extends StatefulWidget {
+class animate_list extends StatefulHookConsumerWidget {
   late int index;
-  late Animation<double> animation;
+  // late Animation<double> animation;
+  late var listData;
 
-  animate_list({Key? key, required this.index, required this.animation})
+  animate_list(
+      {Key? key,
+      required this.index,
+      // required this.animation,
+      required this.listData})
       : super(key: key);
 
   @override
-  State<animate_list> createState() => _animate_listState();
+  ConsumerState createState() => _animate_listState();
 }
 
-class _animate_listState extends State<animate_list>
+class _animate_listState extends ConsumerState<animate_list>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   // late Animation _animation;
@@ -36,6 +43,7 @@ class _animate_listState extends State<animate_list>
     // TODO: implement initState
 
     //动画
+    super.initState();
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 800))
           ..addListener(() {
@@ -46,17 +54,16 @@ class _animate_listState extends State<animate_list>
     //   ..addListener(() {
     //     // setState(() {});
     //   });
-    _animationController.stop();
+    // _animationController.stop();
 
-    // _animationController.forward();
+    _animationController.forward();
     _curvedAnimation = CurvedAnimation(
         parent: _animationController, curve: Curves.bounceInOut);
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    _animationController.forward();
+    // _animationController.forward();
     return ScaleTransition(
         scale: CurvedAnimation(
           parent: _animationController,
@@ -89,25 +96,26 @@ class _detailsState extends ConsumerState<details> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    dio = DioRequest.getInstance().dio;
-    // var res = await dio
-    //     .get('http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}');
-    // print(res);
+    //   dio = DioRequest.getInstance().dio;
+    //   // var res = await dio
+    //   //     .get('http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}');
+    //   // print(res);
 
-    map = {
-      "imgURL":
-          'http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}'
-    };
-    ref.read(detailProvoder.notifier).state = map;
-  }
+    //   map = {
+    //     "imgURL":
+    //         'http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}'
+    //   };
+    //   ref.read(detailProvoder.notifier).state = map;
+    // }
 
-  Future _detail() async {
-    var res = await dio
-        .get('http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}');
+    // Future _detail() async {
+    //   var res = await dio
+    //       .get('http://127.0.0.1:4523/mock/965395/detail?userId=${widget.index}');
   }
 
   @override
   Widget build(BuildContext context) {
+    List<ListStore> _listData = ref.watch(listStoreNotifierProvider);
     // Future.delayed(Duration(milliseconds: 100), () {
     //   // add/remove item
     // });
@@ -143,32 +151,23 @@ class _detailsState extends ConsumerState<details> {
               // mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                widget.index % 2 == 0
-                    ? Text(
-                        " A given user's initials should always be paired with the same background color, for consistencytext${widget.index}",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      )
-                    : Text(
-                        " ${widget.index}",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
+                Text(
+                  "${_listData[widget.index].saying} 第${widget.index}个",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
                 SizedBox(height: 8),
                 Row(
                   children: [
                     CircleAvatar(
                       backgroundColor: Colors.red,
-                      backgroundImage: NetworkImage(
-                          'https://picsum.photos/300/300?random=${widget.index}'),
+                      backgroundImage:
+                          NetworkImage(_listData[widget.index].avatar),
                       // backgroundColor: Colors.brown.shade800,
-                      // child: const Text('AH'),s
+                      child: Text(_listData[widget.index].username),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -187,56 +186,80 @@ class _detailsState extends ConsumerState<details> {
                     )),
                 Wrap(
                   children: [
-                    Card(
-                        clipBehavior: Clip.antiAlias,
-                        // margin: EdgeInsets.all(0),
-                        child: Image.network(
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              "assets/images/top.png",
+                    ..._listData[widget.index]
+                        .imgArr
+                        .map((url) => Card(
+                            clipBehavior: Clip.antiAlias,
+                            // margin: EdgeInsets.all(0),
+                            child: Image.network(
+                              url,
+                              errorBuilder: (context, error, stackTrace) {
+                                print(stackTrace);
+                                return Image.asset(
+                                  "assets/images/top.png",
+                                  fit: BoxFit.cover,
+                                  alignment: Alignment.topCenter,
+                                  width: 100,
+                                  height: 100,
+                                );
+                              },
+                              filterQuality: FilterQuality.high,
                               fit: BoxFit.cover,
                               alignment: Alignment.topCenter,
                               width: 100,
                               height: 100,
-                            );
-                          },
-                          filterQuality: FilterQuality.high,
-                          'https://picsum.photos/300/300?random=${widget.index}',
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
-                          width: 100,
-                          height: 100,
-                        )),
-                    Card(
-                        clipBehavior: Clip.antiAlias,
-                        child: Image.network(
-                          filterQuality: FilterQuality.high,
-                          'https://picsum.photos/300/300?random=${widget.index + 1}',
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
-                          width: 100,
-                          height: 100,
-                        )),
-                    Card(
-                        clipBehavior: Clip.antiAlias,
-                        child: Image.network(
-                          filterQuality: FilterQuality.high,
-                          'https://picsum.photos/300/300?random=${widget.index + 2}',
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
-                          width: 100,
-                          height: 100,
-                        )),
-                    Card(
-                        clipBehavior: Clip.antiAlias,
-                        child: Image.network(
-                          filterQuality: FilterQuality.high,
-                          'https://picsum.photos/300/300?random=${widget.index + 3}',
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
-                          width: 100,
-                          height: 100,
-                        ))
+                            )))
+                        .toList(),
+                    // Card(
+                    //     clipBehavior: Clip.antiAlias,
+                    //     // margin: EdgeInsets.all(0),
+                    //     child: Image.network(
+                    //       errorBuilder: (context, error, stackTrace) {
+                    //         return Image.asset(
+                    //           "assets/images/top.png",
+                    //           fit: BoxFit.cover,
+                    //           alignment: Alignment.topCenter,
+                    //           width: 100,
+                    //           height: 100,
+                    //         );
+                    //       },
+                    //       filterQuality: FilterQuality.high,
+                    //       'https://picsum.photos/300/300?random=${widget.index}',
+                    //       fit: BoxFit.cover,
+                    //       alignment: Alignment.topCenter,
+                    //       width: 100,
+                    //       height: 100,
+                    //     )),
+                    // Card(
+                    //     clipBehavior: Clip.antiAlias,
+                    //     child: Image.network(
+                    //       filterQuality: FilterQuality.high,
+                    //       'https://picsum.photos/300/300?random=${widget.index + 1}',
+                    //       fit: BoxFit.cover,
+                    //       alignment: Alignment.topCenter,
+                    //       width: 100,
+                    //       height: 100,
+                    //     )),
+                    // Card(
+                    //     clipBehavior: Clip.antiAlias,
+                    //     child: Image.network(
+                    //       filterQuality: FilterQuality.high,
+                    //       'https://picsum.photos/300/300?random=${widget.index + 2}',
+                    //       fit: BoxFit.cover,
+                    //       alignment: Alignment.topCenter,
+                    //       width: 100,
+                    //       height: 100,
+                    //     )),
+                    // Card(
+                    //     clipBehavior: Clip.antiAlias,
+                    //     child: Image.network(
+                    //       filterQuality: FilterQuality.high,
+                    //       'https://picsum.photos/300/300?random=${widget.index + 3}',
+                    //       fit: BoxFit.cover,
+                    //       alignment: Alignment.topCenter,
+                    //       width: 100,
+                    //       height: 100,
+                    //     ))
                   ],
                 ),
                 Row(

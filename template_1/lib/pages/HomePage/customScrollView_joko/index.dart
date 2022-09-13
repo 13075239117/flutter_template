@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:template_1/pages/HomePage/animate_list/index.dart';
 import 'package:template_1/services/request.dart';
+
+import 'models/index.dart';
+import 'models/model.dart';
 
 class customScrollView_joko extends StatefulHookConsumerWidget {
   BuildContext context;
@@ -18,24 +23,48 @@ class _customScrollView_jokoState extends ConsumerState<customScrollView_joko> {
   late ScrollController _controller;
   // late Dio dio;
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    // ref.read(listStoreNotifierProvider.notifier).getList(2);
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
+
+    super.initState();
     _controller = ScrollController()
       ..addListener(() {
         if (_controller.position.pixels ==
             _controller.position.maxScrollExtent) {
           // _getMoreData();
           print("已触底！");
+          ref.read(listStoreNotifierProvider.notifier).getList(2);
           setState(() {
             isshow = !isshow;
+            hideTip();
           });
         }
       });
-    super.initState();
+    ref.read(listStoreNotifierProvider.notifier).getList(2);
+  }
+
+  hideTip() {
+    Timer(Duration(seconds: 2), () {
+      setState(() {
+        isshow = !isshow;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    List<ListStore> _listData = ref.watch(listStoreNotifierProvider);
+
+    print("长度");
+    print(_listData.length);
+    print("重绘");
     return ConstrainedBox(
       constraints: BoxConstraints.expand(),
       child: Stack(children: [
@@ -127,37 +156,51 @@ class _customScrollView_jokoState extends ConsumerState<customScrollView_joko> {
                   //     // ),
                   //     ),
 
-                  //     SliverList(
-                  //   key: _listKey,
-                  //   delegate: SliverChildBuilderDelegate((context, index) {
-                  //     double height = (Random().nextInt(4) + 1) * 100;
-                  //     print('$index');
-                  //     return AnimatedBuilder(
-                  //         animation: _curvedAnimation,
-                  //         builder: (context, index1) {
-                  //           return FadeTransition(
-                  //               opacity: _curvedAnimation, child: list_card(index));
-                  //         });
-                  //   }, childCount: 10),
-                  // ),
-                  SliverAnimatedList(
+                  SliverList(
                 // key: _listKey,
-                initialItemCount: 4,
-                itemBuilder: (context, index, Animation<double> animation) {
-                  print('$index');
-                  // _animationController.forward();
-
-                  return animate_list(
-                    index: index,
-                    animation: animation,
-                  );
-                  // FadeTransition(
-                  //     key: GlobalKey(),
-                  //     opacity: _curvedAnimation,
-                  //     child: list_card(index)
-                  //     );
-                },
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    // double height = (Random().nextInt(4) + 1) * 100;
+                    // print('$index');
+                    return animate_list(
+                        index: index,
+                        // animation: animation,
+                        listData: _listData[index]);
+                  },
+                  childCount: _listData.length,
+                ),
               ),
+              // ListView.builder(
+              //   itemCount: 1,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return ;
+              //   },
+              // ),
+              // _listData.isEmpty
+              //     ? SliverToBoxAdapter()
+              //     : SliverAnimatedList(
+              //         // key: _listKey,
+              //         initialItemCount: _listData.length,
+              //         itemBuilder:
+              //             (context, index, Animation<double> animation) {
+              //           print('第$index个');
+              //           // _animationController.forward();
+
+              //           return _listData.isEmpty
+              //               ? Center(
+              //                   child: Text("咩"),
+              //                 )
+              //               : animate_list(
+              //                   index: index,
+              //                   animation: animation,
+              //                   listData: _listData[index]);
+              //           // FadeTransition(
+              //           //     key: GlobalKey(),
+              //           //     opacity: _curvedAnimation,
+              //           //     child: list_card(index)
+              //           //     );
+              //         },
+              //       ),
               //     SliverFillRemaining(
               //   fillOverscroll: true,
               //   child: MasonryGridView.count(
@@ -254,6 +297,22 @@ class _customScrollView_jokoState extends ConsumerState<customScrollView_joko> {
           ],
         ),
         // Positioned(top: 200, child: Text('data')),
+        // Tooltip(
+        //   showDuration: Duration(seconds: 2),
+        //   message: "咩",
+        //   child: Center(
+        //     child: Container(
+        //         width: 100,
+        //         height: 100,
+        //         decoration: BoxDecoration(
+        //             color: Color.fromARGB(255, 105, 231, 153),
+        //             borderRadius: BorderRadius.circular(10)
+        //             // border: Border.all(),
+        //             ),
+        //         child:
+        //             Center(child: Text('咩 等下啊1', textAlign: TextAlign.center))),
+        //   ),
+        // )
         Offstage(
           offstage: isshow,
           child: Center(

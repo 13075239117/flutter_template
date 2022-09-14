@@ -43,6 +43,7 @@ class ListStoreNotifier extends StateNotifier<List<ListStore>> {
     List<ListStore> _list = [];
     for (var _detail in res.data as List) {
       _list.add(ListStore(
+          userId: _detail['userId'],
           saying: _detail['saying'],
           avatar: _detail['avatar'],
           imgArr: _detail['imgArr'],

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:template_1/pages/HomePage/customScrollView_joko/models/index.dart';
 import 'package:template_1/pages/HomePage/customScrollView_joko/models/model.dart';
-import 'package:template_1/pages/HomePage/listDetail_joko.dart';
+import 'package:template_1/pages/HomePage/listDetail_joko/index.dart';
 import 'package:template_1/services/request.dart';
 import 'package:template_1/untils/router.dart';
 
@@ -120,6 +120,25 @@ class _detailsState extends ConsumerState<details> {
     //   // add/remove item
     // });
     // _animationController.forward();
+
+    Future<void> push_joko(BuildContext context, page) async {
+      // Navigator.push returns a Future that completes after calling
+      // Navigator.pop on the Selection Screen.
+      ref.read(detailNotifierProvider.notifier).getDetail(
+          "http://127.0.0.1:4523/mock/965395/detail?userId=${_listData[widget.index].userId}");
+      final result = await Navigator.push(
+        context,
+        // Create the SelectionScreen in the next step.
+        MaterialPageRoute(
+            builder: (context) => listDetail(),
+            settings: RouteSettings(arguments: {'name': "ok", 'age': '24'})),
+      );
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('$result')));
+      print(mounted);
+      print(result);
+    }
 
     // print("渲染${widget.index}");
     final _listHeight = <int>[100, 200, 200, 300, 400, 200, 300, 400, 200, 100];
@@ -281,22 +300,5 @@ class _detailsState extends ConsumerState<details> {
         ),
       ),
     ));
-  }
-
-  Future<void> push_joko(BuildContext context, page) async {
-    // Navigator.push returns a Future that completes after calling
-    // Navigator.pop on the Selection Screen.
-    final result = await Navigator.push(
-      context,
-      // Create the SelectionScreen in the next step.
-      MaterialPageRoute(
-          builder: (context) => listDetail(),
-          settings: RouteSettings(arguments: {'name': "ok", 'age': '24'})),
-    );
-    ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text('$result')));
-    print(mounted);
-    print(result);
   }
 }

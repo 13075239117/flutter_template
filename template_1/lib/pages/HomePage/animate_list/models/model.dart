@@ -6,9 +6,11 @@ part 'model.freezed.dart';
 @freezed
 class DetailsModel with _$DetailsModel {
   const factory DetailsModel(
-      {required String? username,
+      {required String? userId,
+      required String? username,
       required List? imgArr,
       required String? avatar,
       required String? saying,
+      required String? details,
       required List? comments}) = _DetailsModel;
 }

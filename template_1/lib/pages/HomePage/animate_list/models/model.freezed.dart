@@ -16,10 +16,12 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$DetailsModel {
+  String? get userId => throw _privateConstructorUsedError;
   String? get username => throw _privateConstructorUsedError;
   List<dynamic>? get imgArr => throw _privateConstructorUsedError;
   String? get avatar => throw _privateConstructorUsedError;
   String? get saying => throw _privateConstructorUsedError;
+  String? get details => throw _privateConstructorUsedError;
   List<dynamic>? get comments => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -33,10 +35,12 @@ abstract class $DetailsModelCopyWith<$Res> {
           DetailsModel value, $Res Function(DetailsModel) then) =
       _$DetailsModelCopyWithImpl<$Res>;
   $Res call(
-      {String? username,
+      {String? userId,
+      String? username,
       List<dynamic>? imgArr,
       String? avatar,
       String? saying,
+      String? details,
       List<dynamic>? comments});
 }
 
@@ -50,13 +54,19 @@ class _$DetailsModelCopyWithImpl<$Res> implements $DetailsModelCopyWith<$Res> {
 
   @override
   $Res call({
+    Object? userId = freezed,
     Object? username = freezed,
     Object? imgArr = freezed,
     Object? avatar = freezed,
     Object? saying = freezed,
+    Object? details = freezed,
     Object? comments = freezed,
   }) {
     return _then(_value.copyWith(
+      userId: userId == freezed
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String?,
       username: username == freezed
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -72,6 +82,10 @@ class _$DetailsModelCopyWithImpl<$Res> implements $DetailsModelCopyWith<$Res> {
       saying: saying == freezed
           ? _value.saying
           : saying // ignore: cast_nullable_to_non_nullable
+              as String?,
+      details: details == freezed
+          ? _value.details
+          : details // ignore: cast_nullable_to_non_nullable
               as String?,
       comments: comments == freezed
           ? _value.comments
@@ -89,10 +103,12 @@ abstract class _$$_DetailsModelCopyWith<$Res>
       __$$_DetailsModelCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String? username,
+      {String? userId,
+      String? username,
       List<dynamic>? imgArr,
       String? avatar,
       String? saying,
+      String? details,
       List<dynamic>? comments});
 }
 
@@ -109,13 +125,19 @@ class __$$_DetailsModelCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? userId = freezed,
     Object? username = freezed,
     Object? imgArr = freezed,
     Object? avatar = freezed,
     Object? saying = freezed,
+    Object? details = freezed,
     Object? comments = freezed,
   }) {
     return _then(_$_DetailsModel(
+      userId: userId == freezed
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String?,
       username: username == freezed
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -132,6 +154,10 @@ class __$$_DetailsModelCopyWithImpl<$Res>
           ? _value.saying
           : saying // ignore: cast_nullable_to_non_nullable
               as String?,
+      details: details == freezed
+          ? _value.details
+          : details // ignore: cast_nullable_to_non_nullable
+              as String?,
       comments: comments == freezed
           ? _value._comments
           : comments // ignore: cast_nullable_to_non_nullable
@@ -144,14 +170,18 @@ class __$$_DetailsModelCopyWithImpl<$Res>
 
 class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
   const _$_DetailsModel(
-      {required this.username,
+      {required this.userId,
+      required this.username,
       required final List<dynamic>? imgArr,
       required this.avatar,
       required this.saying,
+      required this.details,
       required final List<dynamic>? comments})
       : _imgArr = imgArr,
         _comments = comments;
 
+  @override
+  final String? userId;
   @override
   final String? username;
   final List<dynamic>? _imgArr;
@@ -167,6 +197,8 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
   final String? avatar;
   @override
   final String? saying;
+  @override
+  final String? details;
   final List<dynamic>? _comments;
   @override
   List<dynamic>? get comments {
@@ -178,7 +210,7 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'DetailsModel(username: $username, imgArr: $imgArr, avatar: $avatar, saying: $saying, comments: $comments)';
+    return 'DetailsModel(userId: $userId, username: $username, imgArr: $imgArr, avatar: $avatar, saying: $saying, details: $details, comments: $comments)';
   }
 
   @override
@@ -186,10 +218,12 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'DetailsModel'))
+      ..add(DiagnosticsProperty('userId', userId))
       ..add(DiagnosticsProperty('username', username))
       ..add(DiagnosticsProperty('imgArr', imgArr))
       ..add(DiagnosticsProperty('avatar', avatar))
       ..add(DiagnosticsProperty('saying', saying))
+      ..add(DiagnosticsProperty('details', details))
       ..add(DiagnosticsProperty('comments', comments));
   }
 
@@ -198,20 +232,24 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DetailsModel &&
+            const DeepCollectionEquality().equals(other.userId, userId) &&
             const DeepCollectionEquality().equals(other.username, username) &&
             const DeepCollectionEquality().equals(other._imgArr, _imgArr) &&
             const DeepCollectionEquality().equals(other.avatar, avatar) &&
             const DeepCollectionEquality().equals(other.saying, saying) &&
+            const DeepCollectionEquality().equals(other.details, details) &&
             const DeepCollectionEquality().equals(other._comments, _comments));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(userId),
       const DeepCollectionEquality().hash(username),
       const DeepCollectionEquality().hash(_imgArr),
       const DeepCollectionEquality().hash(avatar),
       const DeepCollectionEquality().hash(saying),
+      const DeepCollectionEquality().hash(details),
       const DeepCollectionEquality().hash(_comments));
 
   @JsonKey(ignore: true)
@@ -222,12 +260,16 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
 
 abstract class _DetailsModel implements DetailsModel {
   const factory _DetailsModel(
-      {required final String? username,
+      {required final String? userId,
+      required final String? username,
       required final List<dynamic>? imgArr,
       required final String? avatar,
       required final String? saying,
+      required final String? details,
       required final List<dynamic>? comments}) = _$_DetailsModel;
 
+  @override
+  String? get userId;
   @override
   String? get username;
   @override
@@ -236,6 +278,8 @@ abstract class _DetailsModel implements DetailsModel {
   String? get avatar;
   @override
   String? get saying;
+  @override
+  String? get details;
   @override
   List<dynamic>? get comments;
   @override

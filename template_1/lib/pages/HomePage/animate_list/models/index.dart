@@ -5,27 +5,32 @@ import 'package:template_1/services/request.dart';
 
 Dio dio = DioRequest.getInstance().dio;
 
-final detailProvoder = StateProvider.autoDispose(
-  (ref) => {},
-);
-final testProvoder = FutureProvider.autoDispose(
-  (ref) async {
-    try {
-      final photo = ref.watch(detailProvoder);
-      // var res = await Dio()
-      //   ..get(photo['imgURL'],
-      //       options: Options(contentType: 'application/json; charset=utf-8'));
-      var res = await dio.get("http://pic.bizhi360.com/litimg/10799.jpg");
-      return res;
-    } catch (e) {
-      dio.close(force: true);
-    }
-  },
-);
+final detailNotifierProvider =
+    StateNotifierProvider<DetailStoreNotifier, DetailsModel>((ref) {
+  return DetailStoreNotifier();
+});
 
 class DetailStoreNotifier extends StateNotifier<DetailsModel> {
   DetailStoreNotifier()
       : super(const DetailsModel(
-            avatar: '', comments: [], imgArr: [], saying: '', username: ''));
-  Future<void> getDetail(Map params) async {}
+            userId: '',
+            avatar: '',
+            comments: [],
+            details: '',
+            imgArr: [],
+            saying: '',
+            username: ''));
+  Future<void> getDetail(url, {Map<String, dynamic>? params}) async {
+    Dio dio = DioRequest.getInstance().dio;
+    Response res = await dio.get(url, queryParameters: params);
+    Map map = res.data as Map;
+    state = state.copyWith(
+      details: map["details"],
+      userId: map["userId"],
+      imgArr: map['imgArr'],
+      username: map["username"],
+      avatar: map["avatar"],
+      comments: map["comments"],
+    );
+  }
 }

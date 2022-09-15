@@ -83,9 +83,48 @@ class _listDetailState extends ConsumerState<listDetail> {
                   width: 10,
                   height: 10,
                 ),
-                Text(result.username!)
+                Text(
+                  result.username!,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
               ]),
-              Title(color: color, child: child)
+
+              Text(
+                result.summary!,
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                width: 10,
+                height: 10,
+              ),
+              Text(
+                result.context!,
+                style: const TextStyle(fontSize: 25),
+              ),
+              const SizedBox(
+                width: 10,
+                height: 10,
+              ),
+              ...result.imgArr!.map((e) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 3),
+                  child: Image.network(e),
+                );
+              }),
+
+              RichText(
+                  textAlign: TextAlign.right,
+                  text: TextSpan(children: [
+                    const TextSpan(
+                        text: "发布于：", style: TextStyle(color: Colors.black)),
+                    TextSpan(
+                      text: result.date!,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
+                  ])),
+
               // Text(result.saying)
             ],
           ),

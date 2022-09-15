@@ -19,7 +19,10 @@ class DetailStoreNotifier extends StateNotifier<DetailsModel> {
             details: '',
             imgArr: [],
             saying: '',
-            username: ''));
+            username: '',
+            context: '',
+            summary: '',
+            date: ''));
   Future<void> getDetail(url, {Map<String, dynamic>? params}) async {
     Dio dio = DioRequest.getInstance().dio;
     Response res = await dio.get(url, queryParameters: params);
@@ -30,7 +33,9 @@ class DetailStoreNotifier extends StateNotifier<DetailsModel> {
       imgArr: map['imgArr'],
       username: map["username"],
       avatar: map["avatar"],
-      comments: map["comments"],
+      summary: map["summary"],
+      context: map["context"],
+      date: map["date"],
     );
   }
 }

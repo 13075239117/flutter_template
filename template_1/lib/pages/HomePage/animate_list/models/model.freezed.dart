@@ -22,6 +22,9 @@ mixin _$DetailsModel {
   String? get avatar => throw _privateConstructorUsedError;
   String? get saying => throw _privateConstructorUsedError;
   String? get details => throw _privateConstructorUsedError;
+  String? get summary => throw _privateConstructorUsedError;
+  String? get context => throw _privateConstructorUsedError;
+  String? get date => throw _privateConstructorUsedError;
   List<dynamic>? get comments => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -41,6 +44,9 @@ abstract class $DetailsModelCopyWith<$Res> {
       String? avatar,
       String? saying,
       String? details,
+      String? summary,
+      String? context,
+      String? date,
       List<dynamic>? comments});
 }
 
@@ -60,6 +66,9 @@ class _$DetailsModelCopyWithImpl<$Res> implements $DetailsModelCopyWith<$Res> {
     Object? avatar = freezed,
     Object? saying = freezed,
     Object? details = freezed,
+    Object? summary = freezed,
+    Object? context = freezed,
+    Object? date = freezed,
     Object? comments = freezed,
   }) {
     return _then(_value.copyWith(
@@ -87,6 +96,18 @@ class _$DetailsModelCopyWithImpl<$Res> implements $DetailsModelCopyWith<$Res> {
           ? _value.details
           : details // ignore: cast_nullable_to_non_nullable
               as String?,
+      summary: summary == freezed
+          ? _value.summary
+          : summary // ignore: cast_nullable_to_non_nullable
+              as String?,
+      context: context == freezed
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as String?,
+      date: date == freezed
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String?,
       comments: comments == freezed
           ? _value.comments
           : comments // ignore: cast_nullable_to_non_nullable
@@ -109,6 +130,9 @@ abstract class _$$_DetailsModelCopyWith<$Res>
       String? avatar,
       String? saying,
       String? details,
+      String? summary,
+      String? context,
+      String? date,
       List<dynamic>? comments});
 }
 
@@ -131,6 +155,9 @@ class __$$_DetailsModelCopyWithImpl<$Res>
     Object? avatar = freezed,
     Object? saying = freezed,
     Object? details = freezed,
+    Object? summary = freezed,
+    Object? context = freezed,
+    Object? date = freezed,
     Object? comments = freezed,
   }) {
     return _then(_$_DetailsModel(
@@ -158,6 +185,18 @@ class __$$_DetailsModelCopyWithImpl<$Res>
           ? _value.details
           : details // ignore: cast_nullable_to_non_nullable
               as String?,
+      summary: summary == freezed
+          ? _value.summary
+          : summary // ignore: cast_nullable_to_non_nullable
+              as String?,
+      context: context == freezed
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as String?,
+      date: date == freezed
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String?,
       comments: comments == freezed
           ? _value._comments
           : comments // ignore: cast_nullable_to_non_nullable
@@ -176,6 +215,9 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
       required this.avatar,
       required this.saying,
       required this.details,
+      required this.summary,
+      required this.context,
+      required this.date,
       required final List<dynamic>? comments})
       : _imgArr = imgArr,
         _comments = comments;
@@ -199,6 +241,12 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
   final String? saying;
   @override
   final String? details;
+  @override
+  final String? summary;
+  @override
+  final String? context;
+  @override
+  final String? date;
   final List<dynamic>? _comments;
   @override
   List<dynamic>? get comments {
@@ -210,7 +258,7 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'DetailsModel(userId: $userId, username: $username, imgArr: $imgArr, avatar: $avatar, saying: $saying, details: $details, comments: $comments)';
+    return 'DetailsModel(userId: $userId, username: $username, imgArr: $imgArr, avatar: $avatar, saying: $saying, details: $details, summary: $summary, context: $context, date: $date, comments: $comments)';
   }
 
   @override
@@ -224,6 +272,9 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
       ..add(DiagnosticsProperty('avatar', avatar))
       ..add(DiagnosticsProperty('saying', saying))
       ..add(DiagnosticsProperty('details', details))
+      ..add(DiagnosticsProperty('summary', summary))
+      ..add(DiagnosticsProperty('context', context))
+      ..add(DiagnosticsProperty('date', date))
       ..add(DiagnosticsProperty('comments', comments));
   }
 
@@ -238,6 +289,9 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
             const DeepCollectionEquality().equals(other.avatar, avatar) &&
             const DeepCollectionEquality().equals(other.saying, saying) &&
             const DeepCollectionEquality().equals(other.details, details) &&
+            const DeepCollectionEquality().equals(other.summary, summary) &&
+            const DeepCollectionEquality().equals(other.context, context) &&
+            const DeepCollectionEquality().equals(other.date, date) &&
             const DeepCollectionEquality().equals(other._comments, _comments));
   }
 
@@ -250,6 +304,9 @@ class _$_DetailsModel with DiagnosticableTreeMixin implements _DetailsModel {
       const DeepCollectionEquality().hash(avatar),
       const DeepCollectionEquality().hash(saying),
       const DeepCollectionEquality().hash(details),
+      const DeepCollectionEquality().hash(summary),
+      const DeepCollectionEquality().hash(context),
+      const DeepCollectionEquality().hash(date),
       const DeepCollectionEquality().hash(_comments));
 
   @JsonKey(ignore: true)
@@ -266,6 +323,9 @@ abstract class _DetailsModel implements DetailsModel {
       required final String? avatar,
       required final String? saying,
       required final String? details,
+      required final String? summary,
+      required final String? context,
+      required final String? date,
       required final List<dynamic>? comments}) = _$_DetailsModel;
 
   @override
@@ -280,6 +340,12 @@ abstract class _DetailsModel implements DetailsModel {
   String? get saying;
   @override
   String? get details;
+  @override
+  String? get summary;
+  @override
+  String? get context;
+  @override
+  String? get date;
   @override
   List<dynamic>? get comments;
   @override

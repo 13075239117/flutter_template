@@ -12,5 +12,8 @@ class DetailsModel with _$DetailsModel {
       required String? avatar,
       required String? saying,
       required String? details,
+      required String? summary,
+      required String? context,
+      required String? date,
       required List? comments}) = _DetailsModel;
 }

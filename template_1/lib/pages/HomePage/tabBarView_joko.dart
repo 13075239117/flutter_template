@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:template_1/pages/HomePage/customScrollView_joko.dart';
+import 'package:template_1/pages/HomePage/customScrollView_joko/index.dart';
 
 class tarBarView extends StatefulWidget {
   late TabController tabController;

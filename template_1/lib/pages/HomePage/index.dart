@@ -18,7 +18,6 @@ class _MyHomePageState extends State<MyHomePage_joko>
   late AnimationController am;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   double angel = 0;
-
   late TabController tabController;
   late ScrollController _primaryScrollController = ScrollController();
   @override

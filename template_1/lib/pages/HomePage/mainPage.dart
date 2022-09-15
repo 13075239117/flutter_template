@@ -44,8 +44,8 @@ class _mainPageState extends State<mainPage>
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,7 +55,7 @@ class _mainPageState extends State<mainPage>
       color: Colors.red,
       backgroundColor: Colors.blue,
       onRefresh: () async {
-        print("123");
+        print("下拉刷新！");
         Future.value();
         return Future<void>.delayed(const Duration(seconds: 3));
       },
@@ -68,7 +68,11 @@ class _mainPageState extends State<mainPage>
               sliver: sliverAppBar(
                   innerBoxIsScrolled: innerBoxIsScrolled,
                   tabController: _tabController),
-            )
+            ),
+            // SliverOffstage(
+            //   offstage:false,
+            //   sliver: slive,
+            // )
           ];
         },
         body: tarBarView(tabController: _tabController),

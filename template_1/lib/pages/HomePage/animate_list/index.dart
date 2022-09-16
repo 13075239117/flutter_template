@@ -125,7 +125,7 @@ class _detailsState extends ConsumerState<details> {
       // Navigator.push returns a Future that completes after calling
       // Navigator.pop on the Selection Screen.
       ref.read(detailNotifierProvider.notifier).getDetail(
-          "http://127.0.0.1:4523/mock/965395/detail?userId=${_listData[widget.index].userId}");
+          "http://127.0.0.1:4523/mock2/965395/38370882?userId=${_listData[widget.index].userId}");
       final result = await Navigator.push(
         context,
         // Create the SelectionScreen in the next step.

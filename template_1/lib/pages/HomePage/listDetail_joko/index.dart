@@ -22,9 +22,13 @@ class listDetail extends StatefulHookConsumerWidget {
   _listDetailState createState() => _listDetailState();
 }
 
-class _listDetailState extends ConsumerState<listDetail> {
+class _listDetailState extends ConsumerState<listDetail>
+    with TickerProviderStateMixin {
   late Map map;
   List list = [];
+  late TabController _tabController;
+  late ScrollController _scrollController;
+  late PageController _pageController;
   @override
   void initState() {
     // TODO: implement initState
@@ -33,6 +37,11 @@ class _listDetailState extends ConsumerState<listDetail> {
     //   _detail();
     // });
     super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+    _scrollController = ScrollController();
+    _pageController = PageController(
+      initialPage: 4,
+    );
   }
 
   @override
@@ -67,6 +76,7 @@ class _listDetailState extends ConsumerState<listDetail> {
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListView(
+            controller: _scrollController,
             children: [
               Row(children: [
                 SizedBox(
@@ -124,7 +134,70 @@ class _listDetailState extends ConsumerState<listDetail> {
                           fontWeight: FontWeight.bold, color: Colors.black),
                     ),
                   ])),
+              const Divider(
+                // height: 10,
+                thickness: 10,
+              ),
 
+              TabBar(
+                  indicatorSize: TabBarIndicatorSize.label,
+                  controller: _tabController,
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        "评论",
+                        style: TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        "赞",
+                        style: TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        "转发",
+                        style: TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        "收藏",
+                        style: TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+                    )
+                  ]),
+              Container(
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: PageView(
+                          onPageChanged: (value) {
+                            _tabController.animateTo(value);
+                          },
+                          controller: _pageController,
+                          children: [
+                            ListView.builder(
+                              // controller: _scrollController,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: 100,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                    child: Center(child: Text("page1")));
+                              },
+                            ),
+                            // Container(child: Center(child: Text("page1"))),
+                            Container(child: Text("page2")),
+                            Container(child: Center(child: Text("page3"))),
+                            Container(child: Center(child: Text("page4"))),
+                          ]),
+                    ),
+                  ],
+                ),
+              )
               // Text(result.saying)
             ],
           ),

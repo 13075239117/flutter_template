@@ -18,10 +18,13 @@ class customScrollView_joko extends StatefulHookConsumerWidget {
   _customScrollView_jokoState createState() => _customScrollView_jokoState();
 }
 
-class _customScrollView_jokoState extends ConsumerState<customScrollView_joko> {
+class _customScrollView_jokoState extends ConsumerState<customScrollView_joko>
+    with AutomaticKeepAliveClientMixin {
   bool isshow = true;
   late ScrollController _controller;
   // late Dio dio;
+  @override
+  bool get wantKeepAlive => true;
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/sticky_header/gf_sticky_header_builder.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:template_1/models/test.dart';
 import 'package:template_1/services/request.dart';
@@ -37,7 +38,11 @@ class _listDetailState extends ConsumerState<listDetail>
     //   _detail();
     // });
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 4, vsync: this)
+      ..addListener(() {
+        print("咩");
+        print(_tabController.index);
+      });
     _scrollController = ScrollController();
     _pageController = PageController(
       initialPage: 4,
@@ -168,35 +173,91 @@ class _listDetailState extends ConsumerState<listDetail>
                       ),
                     )
                   ]),
+              // ConstrainedBox(
+              //   constraints: BoxConstraints(
+              //       maxHeight: MediaQuery.of(context).size.height),
+              //   child: NestedScrollView(
+              //     headerSliverBuilder:
+              //         (BuildContext context, bool innerBoxIsScrolled) {
+              //       return <Widget>[
+              //         SliverOverlapAbsorber(
+              //           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+              //               context),
+              //           sliver: SliverAppBar(
+              //             // This is the title in the app bar.
+              //             pinned: true,
+              //             forceElevated: innerBoxIsScrolled,
+              //             bottom: TabBar(
+              //               controller: _tabController,
+              //               // These are the widgets to put in each tab in the tab bar.
+              //               tabs: [
+              //                 Tab(
+              //                   child: Text(
+              //                     "评论",
+              //                     style: TextStyle(
+              //                         color: Colors.black, fontSize: 15),
+              //                   ),
+              //                 ),
+              //                 Tab(
+              //                   child: Text(
+              //                     "赞",
+              //                     style: TextStyle(
+              //                         color: Colors.black, fontSize: 15),
+              //                   ),
+              //                 ),
+              //                 Tab(
+              //                   child: Text(
+              //                     "转发",
+              //                     style: TextStyle(
+              //                         color: Colors.black, fontSize: 15),
+              //                   ),
+              //                 ),
+              //                 Tab(
+              //                   child: Text(
+              //                     "收藏",
+              //                     style: TextStyle(
+              //                         color: Colors.black, fontSize: 15),
+              //                   ),
+              //                 )
+              //               ],
+              //             ),
+              //           ),
+              //         ),
+              //       ];
+              //     },
+              //     body: TabBarView(controller: _tabController, children: [
+              //       ListView.builder(
+              //         // controller: _scrollController,
+              //         physics: const NeverScrollableScrollPhysics(),
+              //         itemCount: 50,
+              //         itemBuilder: (BuildContext context, int index) {
+              //           return Container(child: Center(child: Text("page1")));
+              //         },
+              //       ),
+              //       // Container(child: Center(child: Text("page1"))),
+              //       Container(child: Text("page2")),
+              //       Container(child: Text("page3")),
+              //       Container(child: Text("page4")),
+              //     ]),
+              //   ),
+              // ),
               Container(
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: PageView(
-                          onPageChanged: (value) {
-                            _tabController.animateTo(value);
-                          },
-                          controller: _pageController,
-                          children: [
-                            ListView.builder(
-                              // controller: _scrollController,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: 100,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                    child: Center(child: Text("page1")));
-                              },
-                            ),
-                            // Container(child: Center(child: Text("page1"))),
-                            Container(child: Text("page2")),
-                            Container(child: Center(child: Text("page3"))),
-                            Container(child: Center(child: Text("page4"))),
-                          ]),
-                    ),
-                  ],
-                ),
+                child: TabBarView(controller: _tabController, children: [
+                  ListView.builder(
+                    // controller: _scrollController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 50,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(child: Center(child: Text("page1")));
+                    },
+                  ),
+                  // Container(child: Center(child: Text("page1"))),
+                  Container(child: Text("暂无数据", textAlign: TextAlign.center)),
+                  Container(child: Text("page3")),
+                  Container(child: Text("page4")),
+                ]),
               )
               // Text(result.saying)
             ],

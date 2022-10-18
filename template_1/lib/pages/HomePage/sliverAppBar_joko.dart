@@ -3,11 +3,9 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class sliverAppBar extends StatefulWidget {
-  bool innerBoxIsScrolled;
+  // bool innerBoxIsScrolled;
   late TabController tabController;
-  sliverAppBar(
-      {Key? key, required this.innerBoxIsScrolled, required this.tabController})
-      : super(key: key);
+  sliverAppBar({Key? key, required this.tabController}) : super(key: key);
 
   @override
   State<sliverAppBar> createState() => _sliverAppBarState();
@@ -29,38 +27,38 @@ class _sliverAppBarState extends State<sliverAppBar>
     return SliverAppBar(
       floating: true,
       snap: true,
-      bottom: TabBar(
-          physics: const BouncingScrollPhysics(),
-          // enableFeedback: true,
-          onTap: (value) {
-            // if (value == 0 && widget.con.hasClients) {
-            //   // print(_scrollController.hasClients);
-            //   widget.con.animateTo(0.00,
-            //       duration: Duration(seconds: 2), curve: Curves.easeOutBack);
-            // }
-          },
-          controller: widget.tabController,
-          indicatorColor: Colors.green[400],
-          tabs: [
-            Tab(
-              icon: Icon(
-                Icons.cloud_outlined,
-                color: Colors.green[400],
-              ),
-            ),
-            Tab(
-              icon: Icon(
-                Icons.beach_access_sharp,
-                color: Colors.green[400],
-              ),
-            ),
-            Tab(
-              icon: Icon(
-                Icons.brightness_5_sharp,
-                color: Colors.green[400],
-              ),
-            ),
-          ]),
+      // bottom: TabBar(
+      //     physics: const BouncingScrollPhysics(),
+      //     // enableFeedback: true,
+      //     onTap: (value) {
+      //       // if (value == 0 && widget.con.hasClients) {
+      //       //   // print(_scrollController.hasClients);
+      //       //   widget.con.animateTo(0.00,
+      //       //       duration: Duration(seconds: 2), curve: Curves.easeOutBack);
+      //       // }
+      //     },
+      //     controller: widget.tabController,
+      //     indicatorColor: Colors.green[400],
+      //     tabs: [
+      //       Tab(
+      //         icon: Icon(
+      //           Icons.cloud_outlined,
+      //           color: Colors.green[400],
+      //         ),
+      //       ),
+      //       Tab(
+      //         icon: Icon(
+      //           Icons.beach_access_sharp,
+      //           color: Colors.green[400],
+      //         ),
+      //       ),
+      //       Tab(
+      //         icon: Icon(
+      //           Icons.brightness_5_sharp,
+      //           color: Colors.green[400],
+      //         ),
+      //       ),
+      //     ]),
       leading: IconButton(
           onPressed: () {
             // widget.ki.currentState!.openDrawer();
@@ -68,7 +66,7 @@ class _sliverAppBarState extends State<sliverAppBar>
           icon: Icon(Icons.ac_unit)),
       expandedHeight: 200,
       centerTitle: true,
-      forceElevated: widget.innerBoxIsScrolled,
+      // forceElevated: widget.innerBoxIsScrolled,
       // title: Text("nihao"),
       // floating: true,
       pinned: true,

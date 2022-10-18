@@ -258,8 +258,14 @@ class _listDetailState extends ConsumerState<listDetail>
                   Container(child: Text("page3")),
                   Container(child: Text("page4")),
                 ]),
-              )
+              ),
               // Text(result.saying)
+              BottomSheet(
+                onClosing: () {},
+                builder: (context) {
+                  return Text("data");
+                },
+              )
             ],
           ),
         )

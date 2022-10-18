@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:template_1/pages/HomePage/animate_list/index.dart';
+import 'package:template_1/pages/HomePage/sliverAppBar_joko.dart';
 import 'package:template_1/services/request.dart';
 
 import 'models/index.dart';
@@ -19,9 +20,10 @@ class customScrollView_joko extends StatefulHookConsumerWidget {
 }
 
 class _customScrollView_jokoState extends ConsumerState<customScrollView_joko>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   bool isshow = true;
   late ScrollController _controller;
+  late TabController _tabController;
   // late Dio dio;
   @override
   bool get wantKeepAlive => true;
@@ -37,6 +39,7 @@ class _customScrollView_jokoState extends ConsumerState<customScrollView_joko>
     // TODO: implement initState
 
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
     _controller = ScrollController()
       ..addListener(() {
         if (_controller.position.pixels ==
@@ -89,12 +92,13 @@ class _customScrollView_jokoState extends ConsumerState<customScrollView_joko>
             // SliverPadding(
             //   padding: EdgeInsets.all(8),
             //   sliver:
-            SliverOverlapInjector(
-              // This is the flip side of the SliverOverlapAbsorber
-              // above.
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                  widget.context),
-            ),
+            // SliverOverlapInjector(
+            //   // This is the flip side of the SliverOverlapAbsorber
+            //   // above.
+            //   handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+            //       widget.context),
+            // ),
+            sliverAppBar(tabController: _tabController),
             SliverPadding(
               padding: EdgeInsets.all(4),
               sliver:

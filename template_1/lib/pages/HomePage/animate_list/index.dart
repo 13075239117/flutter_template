@@ -125,7 +125,7 @@ class _detailsState extends ConsumerState<details> {
       // Navigator.push returns a Future that completes after calling
       // Navigator.pop on the Selection Screen.
       ref.read(detailNotifierProvider.notifier).getDetail(
-          "http://127.0.0.1:4523/mock2/965395/38370882?userId=${_listData[widget.index].userId}");
+          "http://127.0.0.1:4523/m1/965395-0-default/detail?userId=${_listData[widget.index].userId}");
       final result = await Navigator.push(
         context,
         // Create the SelectionScreen in the next step.
@@ -154,7 +154,7 @@ class _detailsState extends ConsumerState<details> {
         //   // Create the SelectionScreen in the next step.
         //   MaterialPageRoute(builder: (context) => listDetail()),
         // );
-        push_joko(context, listDetail);
+        // push_joko(context, listDetail);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -281,6 +281,28 @@ class _detailsState extends ConsumerState<details> {
                     //     ))
                   ],
                 ),
+                Icon(
+                  Icons.sunny,
+                  color: Colors.red,
+                ),
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.red,
+                      backgroundImage:
+                          NetworkImage(_listData[widget.index].avatar),
+                      // backgroundColor: Colors.brown.shade800,
+                      child: Text(_listData[widget.index].username,
+                          textAlign: TextAlign.center),
+                      radius: 15,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                        "123123aswdassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+                  ],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -290,7 +312,25 @@ class _detailsState extends ConsumerState<details> {
                           Icons.favorite_border,
                           color: Colors.red,
                         )),
-                    Icon(Icons.messenger_outline),
+                    IconButton(
+                      onPressed: () {
+                        // Scaffold.of(context).c
+                        showModalBottomSheet<void>(
+                          context: context,
+                          builder: (context) {
+                            return SizedBox(
+                              height: 300,
+                              width: double.infinity,
+                              child: Center(
+                                  child: Text(
+                                "data",
+                              )),
+                            );
+                          },
+                        );
+                      },
+                      icon: Icon(Icons.messenger_outline),
+                    ),
                     IconButton(onPressed: () {}, icon: Icon(Icons.share)),
                   ],
                 )

@@ -6,6 +6,8 @@ import 'package:template_1/main.dart';
 import 'package:template_1/pages/HomePage/TabBarView_joko.dart';
 import 'package:template_1/pages/HomePage/sliverAppBar_joko.dart';
 
+import 'TabBarView_Joko/Page_one.dart';
+
 class mainPage extends StatefulWidget {
   var ki;
   var con;
@@ -51,32 +53,33 @@ class _mainPageState extends State<mainPage>
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      key: _refreshIndicatorKey,
-      color: Colors.red,
-      backgroundColor: Colors.blue,
-      onRefresh: () async {
-        print("下拉刷新！");
-        Future.value();
-        return Future<void>.delayed(const Duration(seconds: 3));
-      },
-      child: NestedScrollView(
-        physics: const BouncingScrollPhysics(),
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: sliverAppBar(
-                  innerBoxIsScrolled: innerBoxIsScrolled,
-                  tabController: _tabController),
-            ),
-            // SliverOffstage(
-            //   offstage:false,
-            //   sliver: slive,
-            // )
-          ];
+        key: _refreshIndicatorKey,
+        color: Colors.red,
+        backgroundColor: Colors.blue,
+        onRefresh: () async {
+          print("下拉刷新！");
+          Future.value();
+          return Future<void>.delayed(const Duration(seconds: 3));
         },
-        body: tarBarView(tabController: _tabController),
-      ),
-    );
+        child: PageOne()
+        // NestedScrollView(
+        //   physics: const BouncingScrollPhysics(),
+        //   headerSliverBuilder: (context, innerBoxIsScrolled) {
+        //     return <Widget>[
+        //       SliverOverlapAbsorber(
+        //         handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+        //         sliver: sliverAppBar(
+        //             innerBoxIsScrolled: innerBoxIsScrolled,
+        //             tabController: _tabController),
+        //       ),
+        //       // SliverOffstage(
+        //       //   offstage:false,
+        //       //   sliver: slive,
+        //       // )
+        //     ];
+        //   },
+        //   body: PageOne(),
+        // ),
+        );
   }
 }

@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:template_1/components/Comment/index.dart';
 import 'package:template_1/pages/HomePage/customScrollView_joko/models/index.dart';
 import 'package:template_1/pages/HomePage/customScrollView_joko/models/model.dart';
 import 'package:template_1/pages/HomePage/listDetail_joko/index.dart';
@@ -285,24 +287,24 @@ class _detailsState extends ConsumerState<details> {
                   Icons.sunny,
                   color: Colors.red,
                 ),
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.red,
-                      backgroundImage:
-                          NetworkImage(_listData[widget.index].avatar),
-                      // backgroundColor: Colors.brown.shade800,
-                      child: Text(_listData[widget.index].username,
-                          textAlign: TextAlign.center),
-                      radius: 15,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                        "123123aswdassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     CircleAvatar(
+                //       backgroundColor: Colors.red,
+                //       backgroundImage:
+                //           NetworkImage(_listData[widget.index].avatar),
+                //       // backgroundColor: Colors.brown.shade800,
+                //       child: Text(_listData[widget.index].username,
+                //           textAlign: TextAlign.center),
+                //       radius: 15,
+                //     ),
+                //     SizedBox(
+                //       width: 10,
+                //     ),
+                //     Text(
+                //         "123123aswdassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+                //   ],
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -319,19 +321,21 @@ class _detailsState extends ConsumerState<details> {
                           context: context,
                           builder: (context) {
                             return SizedBox(
-                              height: 300,
-                              width: double.infinity,
-                              child: Center(
-                                  child: Text(
-                                "data",
-                              )),
+                              height: 550,
+                              width: double.maxFinite,
+                              child: Commment(),
                             );
                           },
                         );
                       },
                       icon: Icon(Icons.messenger_outline),
                     ),
-                    IconButton(onPressed: () {}, icon: Icon(Icons.share)),
+                    IconButton(
+                        onPressed: () {
+                          Share.share(
+                              'check out my website https://example.com');
+                        },
+                        icon: Icon(Icons.share)),
                   ],
                 )
               ],
